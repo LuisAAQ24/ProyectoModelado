@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity2">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                app:srcCompat="@drawable/logo2"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/titulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/res1"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/texrandom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/res2"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <ImageView
+                android:id="@+id/imageViewPerfil"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginBottom="10dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/perfil1"
+                android:layout_gravity="center"
+                android:contentDescription="@string/res2"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <EditText
+                android:id="@+id/editNombre"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/res3"
+                android:textColorHint="#808080"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/editApellido"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/res4"
+                android:textColorHint="#808080"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/editUsername"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/res33"
+                android:textColorHint="#808080"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/editTelefono"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/res5"
+                android:textColorHint="#808080"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/editHobbies"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/res6"
+                android:textColorHint="#808080"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/editEmail"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/res88"
+                android:textColorHint="#808080"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/textViewOculto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:textColor="#FF0000"
+                android:text="@string/res24"/>
+
+            <EditText
+                android:id="@+id/editContrasena"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/res7"
+                android:inputType="textPassword"
+                android:textColorHint="#808080"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center" />
+
+            <ImageView
+                android:id="@+id/imageViewOjo"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:contentDescription=""
+                android:focusable="true"
+                android:layout_gravity="right"
+                android:src="@drawable/ojo2" />
+
+            <EditText
+                android:id="@+id/editConfirmarContrasena"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/res8"
+                android:inputType="textPassword"
+                android:textColorHint="#808080"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="@string/res9"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <Spinner
+                android:id="@+id/spinnerFormaPago"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="@string/res16"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <Spinner
+                android:id="@+id/spinnerTipousuario"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/editNumeroTarjeta"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/res28"
+                android:inputType="number"
+                android:maxLines="1"
+                android:textColorHint="#808080"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/editFechaVencimiento"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="MM/AA"
+                android:maxLines="1"
+                android:textColorHint="#808080"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/editCVC"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="CVC"
+                android:textColorHint="#808080"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <EditText
+                android:id="@+id/editTitularTarjeta"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/res29"
+                android:textColorHint="#808080"
+                android:maxLines="1"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/textViewSeleccionFecha"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:text="@string/res30"
+                android:textColorHint="#808080"
+                android:focusable="false"
+                android:clickable="true"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"/>
+
+            <Button
+                android:id="@+id/buttonFechaNacimiento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/res31"
+                android:background="@drawable/botonredondo"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center_horizontal"/>
+
+            <Button
+                android:id="@+id/buttonRegistrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/res32"
+                android:background="@drawable/botonredondo"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -1,0 +1,38 @@
+<!-- res/layout/activity_language_selection.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textoleny"
+        android:text="Cambiar de Idioma"
+        android:layout_gravity="left"
+        android:padding="16dp" />
+    <Spinner
+        android:id="@+id/languageSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/selectColorButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar Color"/>
+
+    <TextView
+        android:id="@+id/colorDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Color Seleccionado"
+        android:padding="16dp" />
+
+    <Button
+        android:id="@+id/confirmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirmar Cambios"/>
+</LinearLayout>
