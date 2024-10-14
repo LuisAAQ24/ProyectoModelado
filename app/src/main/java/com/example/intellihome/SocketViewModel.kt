@@ -24,13 +24,21 @@ class SocketViewModel : ViewModel() {
 
                 // Hilo para recibir respuestas del servidor
                 while (true) {
+                    // Comprobar si hay una línea disponible
                     if (`in`?.hasNextLine() == true) {
                         val response = `in`?.nextLine() // Leer respuesta del servidor
-                        _serverResponse.postValue(response) //falla pero no se toca
+
+                        // Asegurarse de que la respuesta no sea nula
+                        response?.let {
+                            _serverResponse.postValue(it) // Publicar respuesta
+                        } ?: run {
+                            _serverResponse.postValue("Respuesta nula del servidor")
+                        }
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _serverResponse.postValue("Error de conexión: ${e.message}")
             }
         }.start()
     }
