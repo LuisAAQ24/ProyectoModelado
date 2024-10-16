@@ -47,6 +47,7 @@ class MainActivity2 : BaseActivity() {
     private lateinit var spinnerFormaPago: Spinner
     private lateinit var spinnerTipoUsuario: Spinner
     private lateinit var editNumeroTarjeta: EditText
+    private lateinit var editIBAN: EditText
     private lateinit var editFechaVencimiento: EditText
     private lateinit var editCVC: EditText
     private lateinit var textViewSeleccionFecha: TextView
@@ -84,7 +85,7 @@ class MainActivity2 : BaseActivity() {
         setContentView(R.layout.activity_main2)
         ThemeUtils.applyTheme(this)
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("172.18.173.122", 6060)
+        socketViewModel.connectToServer("192.168.0.114", 6060)
         socketViewModel.serverResponse.observe(this, androidx.lifecycle.Observer { response ->
             handleServerResponse(response)
         })
@@ -100,6 +101,7 @@ class MainActivity2 : BaseActivity() {
         spinnerFormaPago = findViewById(R.id.spinnerFormaPago)
         spinnerTipoUsuario = findViewById(R.id.spinnerTipousuario)
         editNumeroTarjeta = findViewById(R.id.editNumeroTarjeta)
+        editIBAN = findViewById(R.id.editIBAN)
         editFechaVencimiento = findViewById(R.id.editFechaVencimiento)
         editCVC = findViewById(R.id.editCVC)
         textViewSeleccionFecha = findViewById(R.id.textViewSeleccionFecha)
@@ -244,12 +246,13 @@ class MainActivity2 : BaseActivity() {
         val confirmarContrasena = editConfirmarContrasena.text.toString().trim()
         val formaPago = spinnerFormaPago.selectedItem.toString().trim()
         val numeroTarjeta = editNumeroTarjeta.text.toString().trim()
+        val IBAN = editIBAN.text.toString().trim()
         val fechaVencimiento = editFechaVencimiento.text.toString().trim()
         val cvc = editCVC.text.toString().trim()
         //ver que no esten vacías
         if (nombre.isEmpty() || apellido.isEmpty() || username.isEmpty() || telefono.isEmpty() ||
             hobbies.isEmpty() || email.isEmpty() || contrasena.isEmpty() || confirmarContrasena.isEmpty() ||
-            formaPago.isEmpty() || fechaVencimiento.isEmpty() || cvc.isEmpty() || fechaNacimiento.isEmpty() ||
+            formaPago.isEmpty() || fechaVencimiento.isEmpty() || cvc.isEmpty() || IBAN.isEmpty() || fechaNacimiento.isEmpty() ||
             numeroTarjeta.isEmpty()) {
             Toast.makeText(this, getString(R.string.res23), Toast.LENGTH_SHORT).show() // "Por favor, complete todos los campos."
             return
@@ -274,7 +277,7 @@ class MainActivity2 : BaseActivity() {
         }
 
         //mandar datos
-        val usuarioData = "registro,$contrasena,$email,$username,$telefono,$apellido,$nombre,$nombre,$formaPago,$numeroTarjeta,$fechaVencimiento,$cvc,$fechaNacimiento,$hobbies"
+        val usuarioData = "registro,$contrasena,$email,$username,$telefono,$apellido,$nombre,$nombre,$formaPago,$numeroTarjeta,$IBAN,$fechaVencimiento,$cvc,$fechaNacimiento,$hobbies"
         socketViewModel.sendMessage(usuarioData)
 
         //startActivity(intent)

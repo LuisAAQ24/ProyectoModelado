@@ -37,19 +37,7 @@ class MainActivity3 : AppCompatActivity() {
             insets
         }
     }
-    //private fun applyCustomColors() {
-     //   val sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE)
-      //  val selectedColor = sharedPreferences.getInt("Selected_Color", Color.WHITE)
 
-        // Obtener colores
-     //   val darkColor = ThemeUtils.darkenColor(selectedColor)
-     //   val lightColor = ThemeUtils.lightenColor(selectedColor)
-
-        // Establecer color de fondo y de botones
-      //  val mainLayout = findViewById<View>(R.id.main) // Cambia esto por el ID real de tu layout
-       // mainLayout.setBackgroundColor(lightColor)
-      //  val buttonIrASeleccionDeIdioma: Button = findViewById(R.id.buttonIrASeleccionDeIdioma)
-      //  buttonIrASeleccionDeIdioma.setBackgroundColor(darkColor)
     }
 
 }
