@@ -4,7 +4,7 @@
     package="com.example.intellihome">
 
     <uses-feature
-        android:name="android.hardware.camera"
+        android:name="android.hardware.camera"uytgfrdsa
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
