@@ -2,6 +2,7 @@ package com.example.intellihome
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.widget.Toast
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import android.content.SharedPreferences
+import java.util.Locale
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -23,6 +25,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var userMarker: Marker
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var geocoder: Geocoder
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +34,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         sharedPreferences = getSharedPreferences("location_prefs", MODE_PRIVATE)
+        geocoder = Geocoder(this, Locale.getDefault()) // Inicializa Geocoder
 
         // Obtener el mapa
         val mapFragment = supportFragmentManager
@@ -69,8 +73,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     override fun onMarkerDrag(marker: Marker) {}
 
                     override fun onMarkerDragEnd(marker: Marker) {
-                        saveLocation(marker.position)
-                        finish() // Cerrar la actividad después de guardar
+                        // Guardar la ubicación cuando el usuario termine de arrastrar el marcador
+                        val newLatLng = marker.position
+                        getCityFromLocation(newLatLng)
                     }
                 })
             } ?: run {
@@ -79,12 +84,38 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun saveLocation(latLng: LatLng) {
+    private fun getCityFromLocation(latLng: LatLng) {
+        val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+        if (addresses != null) {
+            if (addresses.isNotEmpty()) {
+                val city = addresses[0]?.locality // Obtener el nombre de la ciudad
+                Toast.makeText(this, "Ciudad seleccionada: $city", Toast.LENGTH_SHORT).show()
+
+                // Guardar la ciudad y la ubicación
+                saveLocation(latLng, city)
+            } else {
+                Toast.makeText(this, "No se pudo obtener la ciudad.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun saveLocation(latLng: LatLng, city: String?) {
         val editor = sharedPreferences.edit()
         editor.putFloat("latitude", latLng.latitude.toFloat())
         editor.putFloat("longitude", latLng.longitude.toFloat())
         editor.apply()
-        Toast.makeText(this, "Ubicación guardada: ${latLng.latitude}, ${latLng.longitude}", Toast.LENGTH_SHORT).show()
+
+        // Mostrar la ciudad en el mensaje de guardado
+        val message = if (city != null) {
+            "Ubicación guardada: $city"
+        } else {
+            "Ubicación guardada: ${latLng.latitude}, ${latLng.longitude}"
+        }
+
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+
+        // Cerrar la actividad después de guardar la ubicación
+        finish()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

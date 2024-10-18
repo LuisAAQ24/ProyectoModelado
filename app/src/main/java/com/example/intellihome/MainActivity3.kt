@@ -11,14 +11,35 @@ import androidx.core.view.WindowInsetsCompat
 import android.widget.Button
 import androidx.appcompat.widget.AppCompatButton
 import com.example.intellihome.utils.ThemeUtils
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity3 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main3)
         ThemeUtils.applyTheme(this)
-
+        setContentView(R.layout.activity_main3)
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    // Cambiar a la actividad Home
+                    startActivity(Intent(this, MainActivity::class.java))
+                    true
+                }
+                R.id.navigation_mapa -> {
+                    // Cambiar a la actividad de Mapa
+                    startActivity(Intent(this, LanguageSelectionActivity::class.java))
+                    true
+                }
+                R.id.navigation_otros -> {
+                    // Cambiar a otra actividad
+                    startActivity(Intent(this, MainActivity2::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
         // Configurar el botón
         val buttonIrASeleccionDeIdioma: Button = findViewById(R.id.buttonIrASeleccionDeIdioma)
         buttonIrASeleccionDeIdioma.setOnClickListener {
