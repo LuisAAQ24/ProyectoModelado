@@ -41,6 +41,13 @@
             android:name=".MainActivity2"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <!-- Nueva actividad agregada -->
+        <activity
+            android:name=".MainSubirCasa"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <!-- Fin de la nueva actividad -->
         <activity
             android:name=".MainActivity"
             android:exported="true"

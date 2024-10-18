@@ -32,6 +32,13 @@ class MainActivity3 : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val buttonSubirCasa: Button = findViewById(R.id.buttonIrASubirCasa)
+
+        buttonSubirCasa.setOnClickListener {
+            val intent = Intent(this, MainSubirCasa::class.java)
+            startActivity(intent)
+        }
+
     }
     private fun applyCustomColors() {
         val sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE)

@@ -25,7 +25,7 @@ class MainActivity4 : BaseActivity() {
         ThemeUtils.applyTheme(this)
         //applyCustomColors()
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("10.0.2.2", 6060)
+        socketViewModel.connectToServer("192.168.1.105", 6060)
         socketViewModel.serverResponse.observe(this, Observer { response ->
             handleServerResponse(response)
         })

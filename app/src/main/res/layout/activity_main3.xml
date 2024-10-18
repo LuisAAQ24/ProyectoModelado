@@ -11,4 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/men1" />
+
+    <Button
+        android:id="@+id/buttonIrASubirCasa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subir Casa" />
 </LinearLayout>
