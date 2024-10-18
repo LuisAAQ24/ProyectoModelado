@@ -70,25 +70,10 @@ class MainActivity : BaseActivity() { // Cambiado a BaseActivity
             handleServerResponse(response)
         })
 
-        // Aplicar colores a los botones y fondo
-        applyCustomColors()
+
+
     }
-    //funcion para aplicar colores
-    private fun applyCustomColors() {
-        val sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE)
-        val selectedColor = sharedPreferences.getInt("Selected_Color", Color.WHITE)
 
-        // Obtener colores
-        val darkColor = ThemeUtils.darkenColor(selectedColor)
-        val lightColor = ThemeUtils.lightenColor(selectedColor)
-
-        // Establecer color de fondo y de botones
-        val mainLayout = findViewById<View>(R.id.main) // Cambia esto por el ID real de tu layout
-        mainLayout.setBackgroundColor(lightColor)
-
-        val botonmenu = findViewById<AppCompatButton>(R.id.btnmenu)
-        botonmenu.setBackgroundColor(darkColor)
-    }
 
     // Cargar el idioma cada vez que la actividad se reanuda
     override fun onResume() {

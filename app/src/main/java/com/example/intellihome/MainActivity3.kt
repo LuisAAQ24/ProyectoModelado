@@ -18,7 +18,7 @@ class MainActivity3 : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main3)
         ThemeUtils.applyTheme(this)
-        //applyCustomColors()
+
         // Configurar el botón
         val buttonIrASeleccionDeIdioma: Button = findViewById(R.id.buttonIrASeleccionDeIdioma)
         buttonIrASeleccionDeIdioma.setOnClickListener {
