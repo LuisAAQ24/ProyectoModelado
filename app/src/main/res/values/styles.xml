@@ -5,6 +5,6 @@
         <item name="colorPrimaryDark">#063970</item>
         <item name="colorAccent">#1e81b0</item>
         <item name="android:windowBackground">#abdbe3</item> <!-- Color de fondo de la ventana -->
-        <item name="android:textColor">#154c79</item> <!-- Color de texto global -->
+        <item name="android:textColor">#154c79</item>
     </style>
 </resources>
