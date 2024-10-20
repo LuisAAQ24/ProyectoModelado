@@ -20,6 +20,12 @@
         android:layout_height="wrap_content"
         android:text="Mapa" />
 
+    <Button
+        android:id="@+id/buttonleds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Monitorear" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
