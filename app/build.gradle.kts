@@ -35,11 +35,15 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        dataBinding = true
         viewBinding = true
     }
 }
 
 dependencies {
+    implementation(libs.glide)
+    annotationProcessor(libs.glide.compiler)
+    implementation(libs.recyclerview)
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
     implementation(libs.androidx.core.ktx)

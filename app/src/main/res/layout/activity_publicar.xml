@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Campo de texto para la ubicación -->
+    <EditText
+        android:id="@+id/ubicacion_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ingrese la ubicación"
+        android:inputType="text" />
+
+    <!-- Botón para abrir el selector de fecha -->
+    <Button
+        android:id="@+id/fecha_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Seleccione la fecha" />
+
+    <!-- Texto que mostrará la fecha seleccionada -->
+    <TextView
+        android:id="@+id/fecha_seleccionada"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fecha no seleccionada"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"/>
+
+    <!-- Campo de texto para la capacidad -->
+    <EditText
+        android:id="@+id/capacidad_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ingrese la capacidad"
+        android:inputType="number" />
+
+    <!-- Botón para finalizar y enviar los datos -->
+    <Button
+        android:id="@+id/finalizar_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Finalizar"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

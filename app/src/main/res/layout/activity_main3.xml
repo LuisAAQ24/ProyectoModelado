@@ -21,6 +21,16 @@
         android:text="Mapa" />
 
     <Button
+        android:id="@+id/buttonpublicar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Publicar" />
+    <Button
+        android:id="@+id/buttonalquilar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alquilar" />
+    <Button
         android:id="@+id/buttonleds"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

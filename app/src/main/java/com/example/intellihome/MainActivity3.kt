@@ -47,6 +47,20 @@ class MainActivity3 : AppCompatActivity() {
             val intent = Intent(this, LanguageSelectionActivity::class.java)
             startActivity(intent)
         }
+        val buttonpublicar: Button = findViewById(R.id.buttonpublicar)
+        buttonpublicar.setOnClickListener {
+            // Iniciar publicarActivity
+            val publicar = Intent(this, publicarActivity::class.java)
+            startActivity(publicar)
+        }
+
+        // Configurar el botón para alquilar
+        val buttonalquilar: Button = findViewById(R.id.buttonalquilar)
+        buttonalquilar.setOnClickListener {
+            // Iniciar alquilarActivity
+            val alquilar = Intent(this, alquilarActivity::class.java)
+            startActivity(alquilar)
+        }
         val buttonMapa: Button = findViewById(R.id.buttonMapa)
         buttonMapa.setOnClickListener {
             // Iniciar LanguageSelectionActivity
