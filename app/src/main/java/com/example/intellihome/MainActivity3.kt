@@ -52,13 +52,17 @@ class MainActivity3 : AppCompatActivity() {
             // Iniciar LanguageSelectionActivity
             val mapa = Intent(this, MapActivity::class.java)
             startActivity(mapa)
+        }
+        val buttonleds: Button = findViewById(R.id.buttonleds)
+        buttonleds.setOnClickListener {
+            val leds = Intent(this, ledsActivity::class.java)
+            startActivity(leds)
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-    }
-
     }
 
 }
