@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<AbsoluteLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,51 +8,143 @@
     android:background="?android:attr/windowBackground">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Control de LEDs"
+        android:layout_x="115dp"
+        android:layout_y="10dp"
+        android:text="Control de la casa"
         android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="24dp"/>
+        android:textColor="#000000"
+        android:textStyle="bold" />
 
-    <Button
+    <TextView
+        android:id="@+id/tvDescripcion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="40dp"
+        android:layout_y="356dp"
+        android:text="Toca en un cuarto para prender y apagar luz"
+        android:textColor="#FF000000"
+        android:textSize="14sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSala"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="100dp"
+        android:layout_x="258dp"
+        android:layout_y="107dp"
+        android:background="@drawable/gray_button_background"
         android:text="Sala"
-        android:layout_marginBottom="16dp"/>
+        android:textColor="#000000"
+        android:textSize="18sp" />
 
-    <Button
-        android:id="@+id/btnCocina"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cocina"
-        android:layout_below="@id/btnSala"
-        android:layout_marginBottom="16dp"/>
-
-    <Button
-        android:id="@+id/btnBano1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Baño 1"
-        android:layout_below="@id/btnCocina"
-        android:layout_marginBottom="16dp"/>
-
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnBano2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="91dp"
+        android:layout_height="40dp"
+        android:layout_x="173dp"
+        android:layout_y="265dp"
+        android:background="@drawable/gray_button_background"
         android:text="Baño 2"
-        android:layout_below="@id/btnBano1"
-        android:layout_marginBottom="16dp"/>
+        android:textColor="#000000"
+        android:textSize="16sp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/LivingRoom"
+        android:layout_width="64dp"
+        android:layout_height="80dp"
+        android:layout_x="71dp"
+        android:layout_y="107dp"
+        android:background="@drawable/gray_button_background"
+        android:text="Living Room"
+        android:textColor="#000000" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnBano1"
+        android:layout_width="37dp"
+        android:layout_height="80dp"
+        android:layout_x="39dp"
+        android:layout_y="107dp"
+        android:background="@drawable/gray_button_background"
+        android:text="B        a        ñ        o          1"
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/Pasillo"
+        android:layout_width="44dp"
+        android:layout_height="103dp"
+        android:layout_x="131dp"
+        android:layout_y="202dp"
+        android:background="@drawable/gray_button_background"
+        android:text="P              a                     s                i                l                 l               o"
+        android:textColor="#000000"
+        android:textSize="10sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnCocina"
+        android:layout_width="130dp"
+        android:layout_height="99dp"
+        android:layout_x="134dp"
+        android:layout_y="107dp"
+        android:background="@drawable/gray_button_background"
+        android:text="Cocina"
+        android:textColor="#000000"
+        android:textSize="18sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnCuarto1"
+        android:layout_width="91dp"
+        android:layout_height="63dp"
+        android:layout_x="173dp"
+        android:layout_y="205dp"
+        android:background="@drawable/gray_button_background"
+        android:text="Cuarto1"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/Cuarto3"
+        android:layout_width="97dp"
+        android:layout_height="60dp"
+        android:layout_x="38dp"
+        android:layout_y="245dp"
+        android:background="@drawable/gray_button_background"
+        android:text="Cuarto3"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnCuarto2"
+        android:layout_width="97dp"
+        android:layout_height="63dp"
+        android:layout_x="38dp"
+        android:layout_y="184dp"
+        android:background="@drawable/gray_button_background"
+        android:text="Cuarto2"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCochera"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        android:layout_x="263dp"
+        android:layout_y="205dp"
+        android:background="@drawable/gray_button_background"
         android:text="Cochera"
-        android:layout_below="@id/btnBano2"/>
+        android:textColor="#000000"
+        android:textSize="18sp" />
+</AbsoluteLayout>
 
-</RelativeLayout>
+
+
+
+
+
+
+
+
+
+
