@@ -85,7 +85,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCocina"
         android:layout_width="130dp"
-        android:layout_height="100dp"
+        android:layout_height="99dp"
         android:layout_x="134dp"
         android:layout_y="107dp"
         android:background="@drawable/gray_button_background"
