@@ -25,7 +25,7 @@ class MainActivity4 : BaseActivity() {
         ThemeUtils.applyTheme(this)
         //applyCustomColors()
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("192.168.0.114", 6060)
+        socketViewModel.connectToServer("10.0.2.2", 6060)
         socketViewModel.serverResponse.observe(this, Observer { response ->
             handleServerResponse(response)
         })
@@ -46,7 +46,7 @@ class MainActivity4 : BaseActivity() {
             if (correo.isEmpty() || contrasena.isEmpty()) {
                 Toast.makeText(this, getString(R.string.res23), Toast.LENGTH_SHORT).show() // Mensaje de completar campos
             } else {
-                socketViewModel.sendMessage("configuracion,$correo,$contrasena") // Enviar mensaje
+                socketViewModel.sendMessage("confirmación,$correo,$contrasena") // Enviar mensaje
                 println("Yo: $correo,$contrasena")
             }
 
@@ -63,19 +63,31 @@ class MainActivity4 : BaseActivity() {
     }
     private fun handleServerResponse(response: String?) {
         println("Response: $response")
-        if (response == "Enviado") {
+        if (response == "rew") {
             Toast.makeText(this, getString(R.string.con6), Toast.LENGTH_SHORT).show()
-
-        if (response == "Confirmada") {
-            Toast.makeText(this, "Cambio Realizado", Toast.LENGTH_SHORT).show()
             val login = Intent(this, MainActivity::class.java)
             startActivity(login)
-        }
-
         } else {
             println("Fallo34")
             Toast.makeText(this, getString(R.string.Login4), Toast.LENGTH_SHORT).show() // Mensaje de autenticación fallida
         }
     }
+
+    //private fun applyCustomColors() {
+        //val sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE)
+        //val selectedColor = sharedPreferences.getInt("Selected_Color", Color.WHITE)
+
+        // Obtener colores
+        //val darkColor = ThemeUtils.darkenColor(selectedColor)
+        //val lightColor = ThemeUtils.lightenColor(selectedColor)
+
+        // Establecer color de fondo y de botones
+       // val mainLayout = findViewById<View>(R.id.main) // Cambia esto por el ID real de tu layout
+        //mainLayout.setBackgroundColor(lightColor)
+
+        //val botonmenu = findViewById<AppCompatButton>(R.id.btnmenu)
+        //botonmenu.setBackgroundColor(darkColor)
+    //}
+
 
 }

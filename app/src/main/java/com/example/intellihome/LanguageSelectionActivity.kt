@@ -33,7 +33,7 @@ class LanguageSelectionActivity : AppCompatActivity() {
         colorDisplay = findViewById(R.id.colorDisplay)
         selectColorButton = findViewById(R.id.selectColorButton)
         ThemeUtils.applyTheme(this)
-        //applyCustomColors()
+        applyCustomColors()
         // Configurar el Spinner con los idiomas
         val languages = arrayOf("Español", "Inglés", "Húngaro", "Portugués")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, languages)
@@ -54,25 +54,25 @@ class LanguageSelectionActivity : AppCompatActivity() {
                 "Húngaro" -> setAppLanguage("hu")
                 "Portugués" -> setAppLanguage("pt")
             }
-           // saveColor(selectedColor) // Guarda el color seleccionado
+            saveColor(selectedColor) // Guarda el color seleccionado
             // Aquí puedes añadir cualquier otra lógica que desees al confirmar cambios
         }
     }
-   // private fun applyCustomColors() {
-        //val sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE)
-        //val selectedColor = sharedPreferences.getInt("Selected_Color", Color.WHITE)
+    private fun applyCustomColors() {
+        val sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE)
+        val selectedColor = sharedPreferences.getInt("Selected_Color", Color.WHITE)
 
         // Obtener colores
-       // val darkColor = ThemeUtils.darkenColor(selectedColor)
-        //val lightColor = ThemeUtils.lightenColor(selectedColor)
+        val darkColor = ThemeUtils.darkenColor(selectedColor)
+        val lightColor = ThemeUtils.lightenColor(selectedColor)
 
         // Establecer color de fondo y de botones
-        //val mainLayout = findViewById<View>(R.id.main) // Cambia esto por el ID real de tu layout
-       // mainLayout.setBackgroundColor(lightColor)
+        val mainLayout = findViewById<View>(R.id.main) // Cambia esto por el ID real de tu layout
+        mainLayout.setBackgroundColor(lightColor)
 
-       // selectColorButton.setBackgroundColor(darkColor)
-       // confirmButton.setBackgroundColor(darkColor)
-    //}
+        selectColorButton.setBackgroundColor(darkColor)
+        confirmButton.setBackgroundColor(darkColor)
+    }
     private fun showColorPickerDialog() {
         // Inflar el diseño del diálogo
         val dialogView = layoutInflater.inflate(R.layout.dialog_color_picker, null)

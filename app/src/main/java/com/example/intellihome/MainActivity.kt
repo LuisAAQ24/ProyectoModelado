@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.intellihome.utils.ThemeUtils
+import com.example.intellihome.utils.ThemeUtils // Asegúrate de importar ThemeUtils
 
 class MainActivity : BaseActivity() { // Cambiado a BaseActivity
     private lateinit var socketViewModel: SocketViewModel
@@ -63,17 +63,32 @@ class MainActivity : BaseActivity() { // Cambiado a BaseActivity
         }
 
         // Iniciar conexión al servidor
-        socketViewModel.connectToServer("172.18.51.181", 6060)
+        socketViewModel.connectToServer("10.0.2.2", 6060)
 
         // ver las respuestas del servidor
         socketViewModel.serverResponse.observe(this, Observer { response ->
             handleServerResponse(response)
         })
 
-
-
+        // Aplicar colores a los botones y fondo
+        applyCustomColors()
     }
+    //funcion para aplicar colores
+    private fun applyCustomColors() {
+        val sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE)
+        val selectedColor = sharedPreferences.getInt("Selected_Color", Color.WHITE)
 
+        // Obtener colores
+        val darkColor = ThemeUtils.darkenColor(selectedColor)
+        val lightColor = ThemeUtils.lightenColor(selectedColor)
+
+        // Establecer color de fondo y de botones
+        val mainLayout = findViewById<View>(R.id.main) // Cambia esto por el ID real de tu layout
+        mainLayout.setBackgroundColor(lightColor)
+
+        val botonmenu = findViewById<AppCompatButton>(R.id.btnmenu)
+        botonmenu.setBackgroundColor(darkColor)
+    }
 
     // Cargar el idioma cada vez que la actividad se reanuda
     override fun onResume() {

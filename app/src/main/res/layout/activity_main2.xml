@@ -231,16 +231,6 @@
                 android:layout_marginBottom="10dp"
                 android:layout_gravity="center"/>
 
-            <EditText
-                android:id="@+id/editIBAN"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:hint="Digite su IBAN"
-                android:textColorHint="#808080"
-                android:maxLines="1"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="center"/>
-
             <TextView
                 android:id="@+id/textViewSeleccionFecha"
                 android:layout_width="300dp"
