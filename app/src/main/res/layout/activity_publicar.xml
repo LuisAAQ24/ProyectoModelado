@@ -1,90 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/ubicacion_input"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Ingrese una descripción"
-        android:layout_gravity="center"/>
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <EditText
-        android:id="@+id/capacidad_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Ingrese la capacidad"
-        android:layout_gravity="center"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/precio_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Precio: $0"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp" />
+            <Button
+                android:id="@+id/ubicacion_button"
+                android:layout_width="wrap_content"
+                android:layout_height="37dp"
+                android:background="@android:color/holo_blue_light"
+                android:text="Seleccionar Ubicación en Mapa"
+                android:translationX="65dp"
+                android:translationY="80dp" />
 
-    <SeekBar
-        android:id="@+id/seek_bar_precio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="10000"
-        android:layout_marginTop="8dp"/>
+            <TextView
+                android:id="@+id/ubicacion_texto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:translationX="20dp"
+                android:translationY="120dp" />
 
-    <Button
-        android:id="@+id/ubicacion_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Seleccionar Ubicación en Mapa"
-        android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/titulo_texto"
+                android:layout_width="297dp"
+                android:layout_height="74dp"
+                android:text="Subir Propiedad"
+                android:textSize="27sp"
+                android:textStyle="bold"
+                android:translationX="80dp"
+                android:translationY="0dp" />
 
-    <TextView
-        android:id="@+id/ubicacion_texto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ubicación en el mapa"
-        android:layout_gravity="center"/>
+            <EditText
+                android:id="@+id/ubicacion_input"
+                android:layout_width="271dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ubicacion_texto"
+                android:layout_marginTop="67dp"
+                android:hint="Ingrese una descripción"
+                android:textColorHint="#808080"
+                android:translationX="50dp"
+                android:translationY="70dp" />
 
-    <Button
-        android:id="@+id/amenidades_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Seleccionar Amenidades"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"/>
+            <EditText
+                android:id="@+id/reglas_input"
+                android:layout_width="269dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ubicacion_input"
+                android:layout_marginTop="48dp"
+                android:hint="Ingrese las Reglas"
+                android:textColorHint="#808080"
+                android:translationX="50dp"
+                android:translationY="30dp" />
 
-    <TextView
-        android:id="@+id/amenidades_seleccionadas_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Amenidades seleccionadas"
-        android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/precio_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/reglas_input"
+                android:layout_marginTop="40dp"
+                android:text="Precio por noche: $0"
+                android:textSize="18sp"
+                android:translationX="50dp"
+                android:translationY="0dp" />
 
-    <Button
-        android:id="@+id/agregar_imagen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Agregar Imagen"
-        android:layout_gravity="center"/>
+            <SeekBar
+                android:id="@+id/seek_bar_precio"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/precio_text_view"
+                android:layout_marginTop="10dp"
+                android:max="10000"
+                android:translationX="45dp"
+                android:translationY="0dp" />
 
-    <LinearLayout
-        android:id="@+id/contenedor_imagen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:scrollbars="vertical" />
-    <Button
-        android:id="@+id/finalizar_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Finalizar"
-        android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/capacidad_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/seek_bar_precio"
+                android:layout_marginTop="1dp"
+                android:text="Capacidad: 0"
+                android:textSize="18sp"
+                android:translationX="50dp"
+                android:translationY="20dp" />
 
-</LinearLayout>
+            <SeekBar
+                android:id="@+id/seek_bar_capacidad"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/capacidad_text_view"
+                android:max="20"
+                android:progress="0"
+                android:enabled="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginTop="10dp"
+                android:translationX="45dp"
+                android:translationY="5dp" />
+
+
+            <Button
+                android:id="@+id/amenidades_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/seek_bar_capacidad"
+                android:layout_marginTop="27dp"
+                android:background="@android:color/holo_blue_light"
+                android:text="Seleccionar Amenidades"
+                android:translationX="90dp"
+                android:translationY="0dp" />
+
+            <Button
+                android:id="@+id/agregar_imagen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/amenidades_seleccionadas_text_view"
+                android:layout_marginTop="21dp"
+                android:background="@android:color/holo_blue_light"
+                android:text="Agregar Imagen"
+                android:translationX="115dp"
+                android:translationY="10dp" />
+
+            <LinearLayout
+                android:id="@+id/contenedor_imagen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/agregar_imagen"
+                android:layout_marginTop="31dp"
+                android:orientation="horizontal"
+                android:scrollbars="vertical" />
+
+            <Button
+                android:id="@+id/finalizar_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/contenedor_imagen"
+                android:layout_marginTop="21dp"
+                android:text="Finalizar"
+                android:translationX="146dp"
+                android:translationY="00dp" />
+
+            <TextView
+                android:id="@+id/amenidades_seleccionadas_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/amenidades_button"
+                android:layout_marginTop="27dp"
+                android:text=""
+                android:translationX="30dp"
+                android:translationY="0dp" />
+
+
+
+        </RelativeLayout>
+    </ScrollView>
+</FrameLayout>
+
+
+
 

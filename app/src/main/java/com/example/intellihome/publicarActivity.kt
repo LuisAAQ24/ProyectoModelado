@@ -11,6 +11,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import java.util.*
 import androidx.lifecycle.Observer
+import android.util.Log
+
+
 
 class publicarActivity : BaseActivity() {
     private val imagenesSeleccionadas = mutableListOf<Uri>() // Lista para almacenar las imágenes seleccionadas
@@ -20,7 +23,7 @@ class publicarActivity : BaseActivity() {
     private lateinit var socketViewModel: SocketViewModel
     private lateinit var ubicacionInput: EditText
     private lateinit var capacidadInput: EditText
-
+    private lateinit var seek_bar_capacidad: SeekBar
     private lateinit var ubicacionTexto: TextView
     private lateinit var finalizarButton: Button
     private lateinit var ubicacionButton: Button
@@ -29,6 +32,7 @@ class publicarActivity : BaseActivity() {
     private lateinit var seekBarPrecio: SeekBar
     private var precioSeleccionado: Int = 0
     private lateinit var amenidadesSeleccionadasTextView: TextView
+    var capacidadSeleccionada: Int = 0 // Variable para almacenar la capacidad seleccionada
 
     private val amenidadesArray = arrayOf(
         "Wi-Fi gratuito", "Cocina equipada", "Aire acondicionado", "Calefacción",
@@ -52,7 +56,6 @@ class publicarActivity : BaseActivity() {
 
         // Inicializar las vistas
         ubicacionInput = findViewById(R.id.ubicacion_input)
-        capacidadInput = findViewById(R.id.capacidad_input)
         contenedorImagenes = findViewById(R.id.contenedor_imagen)
         ubicacionTexto = findViewById(R.id.ubicacion_texto)
         finalizarButton = findViewById(R.id.finalizar_button)
@@ -60,10 +63,11 @@ class publicarActivity : BaseActivity() {
         amenidadesButton = findViewById(R.id.amenidades_button)
         precioTextView = findViewById(R.id.precio_text_view)
         seekBarPrecio = findViewById(R.id.seek_bar_precio)
+        seek_bar_capacidad = findViewById(R.id.seek_bar_capacidad)
         amenidadesSeleccionadasTextView = findViewById(R.id.amenidades_seleccionadas_text_view)
 
         // Iniciar conexión al servidor
-        socketViewModel.connectToServer("172.18.51.181", 6060)
+        socketViewModel.connectToServer("192.168.0.114", 6060)
 
         // Ver las respuestas del servidor
         socketViewModel.serverResponse.observe(this, Observer { response ->
@@ -81,6 +85,26 @@ class publicarActivity : BaseActivity() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
+
+        // Inicialización del SeekBar y TextView de capacidad
+
+        val capacidadTextView = findViewById<TextView>(R.id.capacidad_text_view)
+
+
+
+        seek_bar_capacidad.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                capacidadSeleccionada = progress
+                findViewById<TextView>(R.id.capacidad_text_view).text =
+                    "Capacidad: $capacidadSeleccionada" // Actualiza el TextView
+                Log.d("publicarActivity", "Capacidad seleccionada: $capacidadSeleccionada")
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+
 
         // Configuración del botón para agregar imágenes
         botonAgregarImagen = findViewById(R.id.agregar_imagen)
@@ -117,7 +141,9 @@ class publicarActivity : BaseActivity() {
         // Restaurar el estado si fue guardado
         if (savedInstanceState != null) {
             ubicacionInput.setText(savedInstanceState.getString("ubicacion"))
-            capacidadInput.setText(savedInstanceState.getString("capacidad"))
+            capacidadSeleccionada = savedInstanceState.getInt("capacidad", 0) // Restaurar capacidad
+            capacidadInput.setText(capacidadSeleccionada.toString()) // Mostrar la capacidad restaurada
+            seek_bar_capacidad.progress = capacidadSeleccionada // Ajustar el SeekBar
             ubicacionTexto.text = savedInstanceState.getString("ubicacionTexto")
         }
 
@@ -155,32 +181,46 @@ class publicarActivity : BaseActivity() {
         amenidadesSeleccionadasTextView.text = amenidadesSeleccionadasTexto.joinToString(", ")
     }
 
-    // Función para obtener los datos ingresados por el usuario
     private fun getDatosIngresados(): String {
-        val ubicacion = ubicacionInput.text.toString()
-        val capacidad = capacidadInput.text.toString()
-
-        val ubicacionTexto = ubicacionTexto.text.toString()
+        val ubicacion = ubicacionInput.text.toString().ifBlank { "Sin ubicación" }
+        val capacidad = capacidadSeleccionada.toString()
+        val ubicacionTexto = ubicacionTexto.text.toString().ifBlank { "Ubicacion no proporcionada" }
         val precio = precioSeleccionado.toString()
-        val amenidades = amenidadesSeleccionadasTextView.text.toString()
+        val amenidades = amenidadesSeleccionadasTextView.text.toString().ifBlank { "Sin amenidades" }
 
-        // Formatear los datos como un String para enviar al servidor
+        Log.d("publicarActivity", "Capacidad: $capacidad")
+
+        // Construir la cadena asegurando que no haya campos vacíos o nulos
         return "publicar,$ubicacion,$capacidad,$ubicacionTexto,$amenidades,$precio"
     }
 
+
+
+
+
     // Función para enviar los datos al servidor
     private fun enviarDatosAlServidor() {
-        val datos = getDatosIngresados()
-        socketViewModel.sendMessage(datos)  // Enviar los datos al servidor
+        val datos = getDatosIngresados()  // Obtener los datos
+
+        // Enviar el mensaje a través del ViewModel
+        socketViewModel.sendMessage(datos)
+
+        // Mostrar un Toast para confirmar que se está intentando enviar los datos
+        Toast.makeText(this, "Datos enviados: $datos", Toast.LENGTH_SHORT).show()
+
+        // Log para depuración en Logcat
+        Log.d("publicarActivity", "Datos enviados: $datos")
     }
+
 
     // Guardar el estado actual antes de destruir la actividad
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("ubicacion", ubicacionInput.text.toString())
-        outState.putString("capacidad", capacidadInput.text.toString())
+        outState.putInt("capacidad", capacidadSeleccionada) // Guardar capacidad seleccionada
         outState.putString("ubicacionTexto", ubicacionTexto.text.toString())
     }
+
 
     // Recibir los datos de la ubicación del mapa y de las imágenes seleccionadas
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -222,3 +262,4 @@ class publicarActivity : BaseActivity() {
         // Aquí puedes manejar la respuesta del servidor según sea necesario
     }
 }
+
