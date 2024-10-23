@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/amburguesa"
             android:layout_alignParentTop="true"
-            android:layout_margin="16dp" />
+            android:layout_margin="11dp" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
