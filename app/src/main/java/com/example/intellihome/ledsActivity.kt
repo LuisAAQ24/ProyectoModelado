@@ -1,6 +1,5 @@
 package com.example.intellihome
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -11,7 +10,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.intellihome.utils.ThemeUtils
 
 class ledsActivity : BaseActivity() {
     private lateinit var socketViewModel: SocketViewModel
@@ -20,27 +18,32 @@ class ledsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_leds)
-        ThemeUtils.applyTheme(this)
-        // Configuración de insets de la ventana
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
-        // Iniciar socket
+        setupWindowInsets()
+
+        // Iniciar el socket y conectarse al servidor
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-
-        // Conectar al servidor
         socketViewModel.connectToServer("172.18.51.181", 6060)
 
-        // Configurar botones
         setupButtons()
 
-        // Observar respuestas del servidor
+        // Observar las respuestas del servidor
         socketViewModel.serverResponse.observe(this, Observer { response ->
             handleServerResponse(response)
         })
+    }
+
+    private fun setupWindowInsets() {
+        val mainView = findViewById<View>(R.id.main)
+        mainView?.let {
+            ViewCompat.setOnApplyWindowInsetsListener(it) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
+            }
+        } ?: run {
+            Toast.makeText(this, "Error: No se encontró la vista principal", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun setupButtons() {
@@ -50,7 +53,7 @@ class ledsActivity : BaseActivity() {
         val btnBano2 = findViewById<Button>(R.id.btnBano2)
         val btnCochera = findViewById<Button>(R.id.btnCochera)
 
-        // Configurar acciones para los botones
+        // Configurar las acciones para los botones
         btnSala.setOnClickListener { sendMessageToServer("leds,LED1") }
         btnCocina.setOnClickListener { sendMessageToServer("leds,LED2") }
         btnBano1.setOnClickListener { sendMessageToServer("leds,LED3") }
@@ -65,11 +68,11 @@ class ledsActivity : BaseActivity() {
 
     private fun handleServerResponse(response: String?) {
         println("Response: $response")
-        // Aquí puedes manejar las respuestas específicas del servidor si es necesario
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        // El ViewModel cerrará la conexión automáticamente en onCleared
     }
 }
+
+
