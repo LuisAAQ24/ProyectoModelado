@@ -20,7 +20,7 @@ class publicarActivity : BaseActivity() {
     private lateinit var socketViewModel: SocketViewModel
     private lateinit var ubicacionInput: EditText
     private lateinit var capacidadInput: EditText
-    private lateinit var fechaSeleccionada: TextView
+
     private lateinit var ubicacionTexto: TextView
     private lateinit var finalizarButton: Button
     private lateinit var ubicacionButton: Button
@@ -118,7 +118,6 @@ class publicarActivity : BaseActivity() {
         if (savedInstanceState != null) {
             ubicacionInput.setText(savedInstanceState.getString("ubicacion"))
             capacidadInput.setText(savedInstanceState.getString("capacidad"))
-            fechaSeleccionada.text = savedInstanceState.getString("fechaSeleccionada")
             ubicacionTexto.text = savedInstanceState.getString("ubicacionTexto")
         }
 
@@ -160,13 +159,13 @@ class publicarActivity : BaseActivity() {
     private fun getDatosIngresados(): String {
         val ubicacion = ubicacionInput.text.toString()
         val capacidad = capacidadInput.text.toString()
-        val fecha = fechaSeleccionada.text.toString()
+
         val ubicacionTexto = ubicacionTexto.text.toString()
         val precio = precioSeleccionado.toString()
         val amenidades = amenidadesSeleccionadasTextView.text.toString()
 
         // Formatear los datos como un String para enviar al servidor
-        return "publicar,$ubicacion,$capacidad,$fecha,$ubicacionTexto,$amenidades,$precio"
+        return "publicar,$ubicacion,$capacidad,$ubicacionTexto,$amenidades,$precio"
     }
 
     // Función para enviar los datos al servidor
@@ -180,7 +179,6 @@ class publicarActivity : BaseActivity() {
         super.onSaveInstanceState(outState)
         outState.putString("ubicacion", ubicacionInput.text.toString())
         outState.putString("capacidad", capacidadInput.text.toString())
-        outState.putString("fechaSeleccionada", fechaSeleccionada.text.toString())
         outState.putString("ubicacionTexto", ubicacionTexto.text.toString())
     }
 
