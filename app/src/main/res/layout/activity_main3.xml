@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/amburguesa"
             android:layout_alignParentTop="true"
-            android:layout_margin="16dp" />
+            android:layout_margin="11dp" />
 
         <!-- Contenedor de botones dinámicos -->
         <LinearLayout
