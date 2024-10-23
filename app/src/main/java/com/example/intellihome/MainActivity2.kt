@@ -85,7 +85,7 @@ class MainActivity2 : BaseActivity() {
         setContentView(R.layout.activity_main2)
         ThemeUtils.applyTheme(this)
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("192.168.0.114", 6060)
+        socketViewModel.connectToServer("172.18.51.181", 6060)
         socketViewModel.serverResponse.observe(this, androidx.lifecycle.Observer { response ->
             handleServerResponse(response)
         })

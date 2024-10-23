@@ -59,8 +59,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Si los permisos están concedidos, obtener la ubicación
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            location?.let {
-                val userLatLng = LatLng(it.latitude, it.longitude)
+            if (location != null) {
+                val userLatLng = LatLng(location.latitude, location.longitude)
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 15f))
 
                 // Añadir un marcador en la ubicación del usuario
@@ -89,7 +89,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                     }
                 }
+            } else {
+                Toast.makeText(this, "No se pudo obtener la ubicación del usuario", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 }
