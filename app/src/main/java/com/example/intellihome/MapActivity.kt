@@ -1,6 +1,7 @@
 package com.example.intellihome
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -16,15 +17,13 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import android.content.SharedPreferences
-import java.util.Locale
+import java.util.*
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var userMarker: Marker
-    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var geocoder: Geocoder
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
@@ -33,7 +32,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_map)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        sharedPreferences = getSharedPreferences("location_prefs", MODE_PRIVATE)
         geocoder = Geocoder(this, Locale.getDefault()) // Inicializa Geocoder
 
         // Obtener el mapa
@@ -63,70 +61,34 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             location?.let {
                 val userLatLng = LatLng(it.latitude, it.longitude)
-                userMarker = mMap.addMarker(MarkerOptions().position(userLatLng).draggable(true))!!
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 15f))
 
-                // Configurar un listener para el marcador
-                mMap.setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener {
-                    override fun onMarkerDragStart(marker: Marker) {}
+                // Añadir un marcador en la ubicación del usuario
+                userMarker = mMap.addMarker(MarkerOptions().position(userLatLng).title("Tu ubicación"))!!
+                userMarker.showInfoWindow()
 
-                    override fun onMarkerDrag(marker: Marker) {}
+                // Establecer listener para la selección de ubicaciones
+                mMap.setOnMapClickListener { selectedLocation ->
+                    userMarker.position = selectedLocation
+                    userMarker.title = "Ubicación seleccionada"
+                    userMarker.showInfoWindow()
 
-                    override fun onMarkerDragEnd(marker: Marker) {
-                        // Guardar la ubicación cuando el usuario termine de arrastrar el marcador
-                        val newLatLng = marker.position
-                        getCityFromLocation(newLatLng)
+                    // Obtener dirección de la ubicación seleccionada
+                    val addressList = geocoder.getFromLocation(selectedLocation.latitude, selectedLocation.longitude, 1)
+                    if (addressList != null) {
+                        if (addressList.isNotEmpty()) {
+                            val address = addressList[0]?.getAddressLine(0)
+
+                            // Devolver la ubicación seleccionada
+                            val intent = Intent()
+                            intent.putExtra("ubicacion", address)
+                            setResult(RESULT_OK, intent)
+                            finish() // Cerrar la actividad y volver a la anterior
+                        } else {
+                            Toast.makeText(this, "No se pudo obtener la dirección", Toast.LENGTH_SHORT).show()
+                        }
                     }
-                })
-            } ?: run {
-                Toast.makeText(this, "No se pudo obtener la ubicación del usuario.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun getCityFromLocation(latLng: LatLng) {
-        val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-        if (addresses != null) {
-            if (addresses.isNotEmpty()) {
-                val city = addresses[0]?.locality // Obtener el nombre de la ciudad
-                Toast.makeText(this, "Ciudad seleccionada: $city", Toast.LENGTH_SHORT).show()
-
-                // Guardar la ciudad y la ubicación
-                saveLocation(latLng, city)
-            } else {
-                Toast.makeText(this, "No se pudo obtener la ciudad.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun saveLocation(latLng: LatLng, city: String?) {
-        val editor = sharedPreferences.edit()
-        editor.putFloat("latitude", latLng.latitude.toFloat())
-        editor.putFloat("longitude", latLng.longitude.toFloat())
-        editor.apply()
-
-        // Mostrar la ciudad en el mensaje de guardado
-        val message = if (city != null) {
-            "Ubicación guardada: $city"
-        } else {
-            "Ubicación guardada: ${latLng.latitude}, ${latLng.longitude}"
-        }
-
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-
-        // Cerrar la actividad después de guardar la ubicación
-        finish()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permiso concedido, intentar obtener la ubicación de nuevo
-                getUserLocation()
-            } else {
-                // Permiso denegado, mostrar un mensaje al usuario
-                Toast.makeText(this, "Permiso de ubicación denegado. No se puede obtener la ubicación.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

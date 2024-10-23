@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_publicar"
+        android:title="Publicar"
+        android:icon="@drawable/publicarmenu" />
+    <item
+        android:id="@+id/menu_alquilar"
+        android:title="Alquilar"
+        android:icon="@drawable/alquilermenu" />
+</menu>

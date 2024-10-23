@@ -3,14 +3,14 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/home2"
-        android:title="Login" />
+        android:icon="@drawable/homeabajo"
+        android:title="Home" />
     <item
         android:id="@+id/navigation_mapa"
-        android:icon="@drawable/config2"
-        android:title="Configuración" />
+        android:icon="@drawable/historial"
+        android:title="Historial" />
     <item
         android:id="@+id/navigation_otros"
-        android:icon="@drawable/mas2"
-        android:title="Registro" />
+        android:icon="@drawable/buscar"
+        android:title="Buscador" />
 </menu>
