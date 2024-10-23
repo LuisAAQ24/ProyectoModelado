@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/ubicación"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ubicación"/>
+
+    <TextView
+        android:id="@+id/precio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Precio"/>
+
+    <TextView
+        android:id="@+id/amenidades"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Amenidades"/>
+    <Button
+        android:id="@+id/buttonRent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alquilar"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

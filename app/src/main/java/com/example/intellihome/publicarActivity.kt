@@ -165,7 +165,7 @@ class publicarActivity : BaseActivity() {
         val amenidades = amenidadesSeleccionadasTextView.text.toString()
 
         // Formatear los datos como un String para enviar al servidor
-        return "publicar,$ubicacion,$capacidad,$ubicacionTexto,$amenidades,$precio"
+        return "publicar,$capacidad,[$ubicacionTexto],$amenidades,$precio"
     }
 
     // Función para enviar los datos al servidor
