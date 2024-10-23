@@ -40,7 +40,7 @@
         android:textSize="18sp" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnBano1"
+        android:id="@+id/btnBano2"
         android:layout_width="91dp"
         android:layout_height="40dp"
         android:layout_x="173dp"
@@ -61,7 +61,7 @@
         android:textColor="#000000" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnBano23"
+        android:id="@+id/btnBano1"
         android:layout_width="37dp"
         android:layout_height="80dp"
         android:layout_x="39dp"
@@ -94,7 +94,7 @@
         android:textSize="18sp" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnBano2"
+        android:id="@+id/btnCuarto1"
         android:layout_width="91dp"
         android:layout_height="63dp"
         android:layout_x="173dp"
