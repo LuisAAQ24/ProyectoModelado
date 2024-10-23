@@ -190,8 +190,10 @@ class publicarActivity : BaseActivity() {
 
         Log.d("publicarActivity", "Capacidad: $capacidad")
 
-        // Construir la cadena asegurando que no haya campos vacíos o nulos
-        return "publicar,$ubicacion,$capacidad,$ubicacionTexto,$amenidades,$precio"
+        // Formatear los datos como un String para enviar al servidor
+        return "publicar,$capacidad,[$ubicacionTexto],$amenidades,$precio"
+
+
     }
 
 

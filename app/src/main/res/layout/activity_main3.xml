@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:background="#abdbe3">
 
+        <!-- Botón para abrir el menú hamburguesa -->
         <Button
             android:id="@+id/buttonAbrirMenu"
             android:layout_width="wrap_content"
@@ -20,6 +21,26 @@
             android:layout_alignParentTop="true"
             android:layout_margin="11dp" />
 
+        <!-- Contenedor de botones dinámicos -->
+        <LinearLayout
+            android:id="@+id/button_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttonAbrirMenu"
+            android:layout_margin="16dp"
+            android:orientation="vertical" />
+
+        <!-- Botón para refrescar datos desde el servidor -->
+        <Button
+            android:id="@+id/button_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Refrescar"
+            android:layout_below="@id/button_container"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true" />
+
+        <!-- Barra de navegación inferior -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
@@ -38,3 +59,4 @@
         android:background="#063970"
         app:menu="@menu/menu_hamburger" />
 </androidx.drawerlayout.widget.DrawerLayout>
+

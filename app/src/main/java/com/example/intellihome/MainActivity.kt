@@ -1,6 +1,7 @@
 package com.example.intellihome
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -16,6 +17,7 @@ import com.example.intellihome.utils.ThemeUtils
 
 class MainActivity : BaseActivity() { // Cambiado a BaseActivity
     private lateinit var socketViewModel: SocketViewModel
+    private lateinit var sharedPreferences: SharedPreferences // Declara SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState) // Llama a onCreate de BaseActivity
@@ -34,14 +36,16 @@ class MainActivity : BaseActivity() { // Cambiado a BaseActivity
         // Iniciar socket
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
 
+        // Inicializar SharedPreferences
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+
         val paso1login = findViewById<EditText>(R.id.edit1)
         val paso2login = findViewById<EditText>(R.id.edit2)
         val botonmenu = findViewById<AppCompatButton>(R.id.btnmenu)
-        val botonConfir =findViewById<AppCompatButton>(R.id.botonreccontrasena)
-        botonConfir.setOnClickListener{
+        val botonConfir = findViewById<AppCompatButton>(R.id.botonreccontrasena)
+        botonConfir.setOnClickListener {
             val lanzar1 = Intent(this, MainActivity4::class.java)
             startActivity(lanzar1)
-
         }
         // errores
         botonmenu.setOnClickListener {
@@ -69,11 +73,7 @@ class MainActivity : BaseActivity() { // Cambiado a BaseActivity
         socketViewModel.serverResponse.observe(this, Observer { response ->
             handleServerResponse(response)
         })
-
-
-
     }
-
 
     // Cargar el idioma cada vez que la actividad se reanuda
     override fun onResume() {
@@ -85,6 +85,13 @@ class MainActivity : BaseActivity() { // Cambiado a BaseActivity
     private fun handleServerResponse(response: String?) {
         println("Response: $response")
         if (response == "true") {
+            // Guardar la contraseña en SharedPreferences
+            val contraseña = findViewById<EditText>(R.id.edit2).text.toString()
+            val editor = sharedPreferences.edit()
+            editor.putString("password", contraseña) // Guardar la contraseña
+            editor.apply() // o editor.commit()
+
+            // Iniciar la actividad de menú
             val menu = Intent(this, MainActivity3::class.java)
             startActivity(menu)
         } else {
