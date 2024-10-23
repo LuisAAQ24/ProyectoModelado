@@ -47,6 +47,7 @@ class MainActivity2 : BaseActivity() {
     private lateinit var spinnerFormaPago: Spinner
     private lateinit var spinnerTipoUsuario: Spinner
     private lateinit var editNumeroTarjeta: EditText
+    private lateinit var editIBAN: EditText
     private lateinit var editFechaVencimiento: EditText
     private lateinit var editCVC: EditText
     private lateinit var textViewSeleccionFecha: TextView
@@ -84,7 +85,7 @@ class MainActivity2 : BaseActivity() {
         setContentView(R.layout.activity_main2)
         ThemeUtils.applyTheme(this)
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("10.0.2.2", 6060)
+        socketViewModel.connectToServer("172.18.51.181", 6060)
         socketViewModel.serverResponse.observe(this, androidx.lifecycle.Observer { response ->
             handleServerResponse(response)
         })
@@ -100,6 +101,7 @@ class MainActivity2 : BaseActivity() {
         spinnerFormaPago = findViewById(R.id.spinnerFormaPago)
         spinnerTipoUsuario = findViewById(R.id.spinnerTipousuario)
         editNumeroTarjeta = findViewById(R.id.editNumeroTarjeta)
+        editIBAN = findViewById(R.id.editIBAN)
         editFechaVencimiento = findViewById(R.id.editFechaVencimiento)
         editCVC = findViewById(R.id.editCVC)
         textViewSeleccionFecha = findViewById(R.id.textViewSeleccionFecha)
@@ -108,7 +110,7 @@ class MainActivity2 : BaseActivity() {
         buttonRegistrar = findViewById(R.id.buttonRegistrar)
         buttonFechaNacimiento.setOnClickListener { mostrarFechaPicker() }
         buttonRegistrar.setOnClickListener { registrarUsuario() }
-        applyCustomColors()
+
         imageViewOjo.setOnClickListener {
             // Cambiar la visibilidad de la contraseña
             val currentInputType = editContrasena.inputType
@@ -136,6 +138,9 @@ class MainActivity2 : BaseActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, formasPago)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerFormaPago.adapter = adapter
+        imageViewPerfil.setOnClickListener {
+            mostrarOpcionesDeImagenDialogo()
+        }
 
         // Agregar el TextWatcher al campo de fecha de vencimiento
         editFechaVencimiento.addTextChangedListener(object : TextWatcher {
@@ -156,20 +161,7 @@ class MainActivity2 : BaseActivity() {
 
 
     }
-    private fun applyCustomColors() {
-        val sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE)
-        val selectedColor = sharedPreferences.getInt("Selected_Color", Color.WHITE)
 
-        // Obtener colores
-        val darkColor = ThemeUtils.darkenColor(selectedColor)
-        val lightColor = ThemeUtils.lightenColor(selectedColor)
-
-        // Establecer color de fondo y de botones
-        val mainLayout = findViewById<View>(R.id.main)
-        mainLayout.setBackgroundColor(lightColor)
-        buttonFechaNacimiento.setBackgroundColor(darkColor)
-        buttonRegistrar.setBackgroundColor(darkColor)
-    }
     private fun handleServerResponse(response: String?) {
         if (response == "true") {
             Toast.makeText(this, getString(R.string.res27), Toast.LENGTH_SHORT).show() // "Registro exitoso"
@@ -180,18 +172,28 @@ class MainActivity2 : BaseActivity() {
             Toast.makeText(this, getString(R.string.Login4), Toast.LENGTH_SHORT).show() // "Registro fallido"
         }
     }
-    private fun mostrarOpcionesDeImagen() {
+
+
+    private fun createImageFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: throw IOException(getString(R.string.res10)) // "No se pudo acceder al directorio"
+        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir).apply {
+            selectedImageUri = Uri.fromFile(this)
+            Log.d("MainActivity2", "Archivo de imagen creado: $selectedImageUri")
+        }
+    }
+
+    private fun mostrarOpcionesDeImagenDialogo() {
         val opciones = arrayOf(getString(R.string.res19), getString(R.string.res20)) // "Tomar foto", "Seleccionar de galería"
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.res21)) // "Seleccionar imagen"
             .setItems(opciones) { dialog, which ->
                 when (which) {
                     0 -> {
-                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                            selectedImageUri = Uri.fromFile(createImageFile())
+                        val intent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                        if (intent.resolveActivity(packageManager) != null) {
+                            selectedImageUri = Uri.fromFile(createImageFile()) // Crear el archivo antes de lanzar la cámara
                             cameraLauncher.launch(selectedImageUri)
-                        } else {
-                            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_CODE)
                         }
                     }
                     1 -> imagePickerLauncher.launch("image/*")
@@ -200,25 +202,36 @@ class MainActivity2 : BaseActivity() {
             .show()
     }
 
-    private fun createImageFile(): File {
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: throw IOException(getString(R.string.res10)) // "No se pudo acceder al directorio"
-        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir).apply {
-            selectedImageUri = Uri.fromFile(this)
-            Log.d("MainActivity2", "Archivo de imagen creado: $selectedImageUri")
-        }
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == CAMERA_PERMISSION_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mostrarOpcionesDeImagen()
+            if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                mostrarOpcionesDeImagen2()
             } else {
-                Toast.makeText(this, getString(R.string.res22), Toast.LENGTH_SHORT).show() // "Permiso denegado para usar la cámara"
+                Toast.makeText(this, getString(R.string.res22), Toast.LENGTH_SHORT).show() // "Permiso denegado"
             }
         }
     }
+    private fun checkPermissions() {
+        val permissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, permissions, CAMERA_PERMISSION_CODE)
+        } else {
+            mostrarOpcionesDeImagen2()
+        }
+    }
+    private fun mostrarOpcionesDeImagen2() {
+        checkPermissions() // Verifica permisos antes de mostrar opciones
+    }
+
+
     //calendario
     private fun mostrarFechaPicker() {
         val calendario = Calendar.getInstance()
@@ -244,12 +257,13 @@ class MainActivity2 : BaseActivity() {
         val confirmarContrasena = editConfirmarContrasena.text.toString().trim()
         val formaPago = spinnerFormaPago.selectedItem.toString().trim()
         val numeroTarjeta = editNumeroTarjeta.text.toString().trim()
+        val IBAN = editIBAN.text.toString().trim()
         val fechaVencimiento = editFechaVencimiento.text.toString().trim()
         val cvc = editCVC.text.toString().trim()
         //ver que no esten vacías
         if (nombre.isEmpty() || apellido.isEmpty() || username.isEmpty() || telefono.isEmpty() ||
             hobbies.isEmpty() || email.isEmpty() || contrasena.isEmpty() || confirmarContrasena.isEmpty() ||
-            formaPago.isEmpty() || fechaVencimiento.isEmpty() || cvc.isEmpty() || fechaNacimiento.isEmpty() ||
+            formaPago.isEmpty() || fechaVencimiento.isEmpty() || cvc.isEmpty() || IBAN.isEmpty() || fechaNacimiento.isEmpty() ||
             numeroTarjeta.isEmpty()) {
             Toast.makeText(this, getString(R.string.res23), Toast.LENGTH_SHORT).show() // "Por favor, complete todos los campos."
             return
@@ -274,7 +288,7 @@ class MainActivity2 : BaseActivity() {
         }
 
         //mandar datos
-        val usuarioData = "registro,$contrasena,$email,$username,$telefono,$apellido,$nombre,$nombre,$formaPago,$numeroTarjeta,$fechaVencimiento,$cvc,$fechaNacimiento,$hobbies"
+        val usuarioData = "registro,$contrasena,$email,$username,$telefono,$apellido,$nombre,$nombre,$formaPago,$numeroTarjeta,$IBAN,$fechaVencimiento,$cvc,$fechaNacimiento,$hobbies"
         socketViewModel.sendMessage(usuarioData)
 
         //startActivity(intent)

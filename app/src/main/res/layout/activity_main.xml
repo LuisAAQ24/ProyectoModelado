@@ -43,17 +43,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo2" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/botonreccontrasena"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/botregistro"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/sesion" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit1"

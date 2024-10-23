@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#abdbe3">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Control de LEDs"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnSala"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sala"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnCocina"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cocina"
+        android:layout_below="@id/btnSala"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnBano1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Baño 1"
+        android:layout_below="@id/btnCocina"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnBano2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Baño 2"
+        android:layout_below="@id/btnBano1"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnCochera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cochera"
+        android:layout_below="@id/btnBano2"/>
+
+</RelativeLayout>

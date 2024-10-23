@@ -53,7 +53,7 @@
     <string name="con3">Correo Inexistente</string>
     <string name="con4">Formato de contraseña incorrecto</string>
     <string name="con5">Confirmar</string>
-    <string name="con6">Cambio realizado con éxito</string>
+    <string name="con6">Correo de confirmación enviado, puedes volver al login</string>
     <string name="con7">Reestablecer contraseña</string>
 
     <string name="men1">Ir a configuración</string>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/main"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/ubicacion_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ingrese una descripción"
+        android:layout_gravity="center"/>
+
+    <EditText
+        android:id="@+id/capacidad_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ingrese la capacidad"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/precio_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Precio: $0"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp" />
+
+    <SeekBar
+        android:id="@+id/seek_bar_precio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10000"
+        android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/ubicacion_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar Ubicación en Mapa"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/ubicacion_texto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ubicación en el mapa"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/amenidades_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar Amenidades"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/amenidades_seleccionadas_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Amenidades seleccionadas"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/agregar_imagen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Agregar Imagen"
+        android:layout_gravity="center"/>
+
+    <LinearLayout
+        android:id="@+id/contenedor_imagen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:scrollbars="vertical" />
+    <Button
+        android:id="@+id/finalizar_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Finalizar"
+        android:layout_gravity="center"/>
+
+</LinearLayout>
+
