@@ -1,46 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="?android:attr/windowBackground">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/buttonIrASeleccionDeIdioma"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/men1" />
-
-    <Button
-        android:id="@+id/buttonMapa"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mapa" />
-
-    <Button
-        android:id="@+id/buttonpublicar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Publicar" />
-    <Button
-        android:id="@+id/buttonalquilar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Alquilar" />
-    <Button
-        android:id="@+id/buttonleds"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Monitorear" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+    <!-- Contenedor principal de la actividad -->
+    <RelativeLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
-        app:menu="@menu/bottom_navigation_menu" /> <!-- Añadir referencia al menú -->
+        android:layout_height="match_parent"
+        android:background="#abdbe3">
 
-</LinearLayout>
+        <Button
+            android:id="@+id/buttonAbrirMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/amburguesa"
+            android:layout_alignParentTop="true"
+            android:layout_margin="16dp" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#063970"
+            app:menu="@menu/bottom_navigation_menu" />
+    </RelativeLayout>
+
+    <!-- Menú de navegación (hamburguesa) -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#063970"
+        app:menu="@menu/menu_hamburger" />
+</androidx.drawerlayout.widget.DrawerLayout>

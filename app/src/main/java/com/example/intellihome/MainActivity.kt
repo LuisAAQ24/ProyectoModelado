@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.intellihome.utils.ThemeUtils // Asegúrate de importar ThemeUtils
+import com.example.intellihome.utils.ThemeUtils
 
 class MainActivity : BaseActivity() { // Cambiado a BaseActivity
     private lateinit var socketViewModel: SocketViewModel
