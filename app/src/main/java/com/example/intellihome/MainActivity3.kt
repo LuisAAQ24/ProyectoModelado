@@ -35,7 +35,7 @@ class MainActivity3 : BaseActivity() {
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
 
         // Conectar al servidor
-        socketViewModel.connectToServer("172.18.51.181", 6060)
+        socketViewModel.connectToServer("172.18.116.167", 6060)
 
         // Contenedor donde se agregarán dinámicamente los botones
         buttonContainer = findViewById(R.id.button_container)
@@ -49,6 +49,7 @@ class MainActivity3 : BaseActivity() {
 
         // Observar la respuesta del servidor
         socketViewModel.serverResponse.observe(this, Observer { response ->
+            Log.d("ServerResponse", response)
             handleServerResponse(response)
         })
 
@@ -112,40 +113,37 @@ class MainActivity3 : BaseActivity() {
         val propertyList = response.split("\n") // Separar por líneas
 
         for (property in propertyList) {
-            // Separar los datos por coma
-            val propertyData = property.split(",")
+            // Limpiar las comillas y separar los datos por coma
+            val cleanedProperty = property.replace("\"", "").trim() // Quitar comillas y espacios
+            val propertyData = cleanedProperty.split(",")
 
-            // Comprobar si el tamaño es correcto
-            if (propertyData.size >= 5) { // Asegúrate de que hay al menos 5 elementos
-                val capacidad = propertyData[1] // Capacidad
-                val location = propertyData[2].removePrefix("[").removeSuffix("]") // Ubicación sin corchetes
-                val amenidades = propertyData[3] // Amenidades
-                val precio = propertyData[4] // Precio
+            // Asegúrate de que haya suficientes datos (por ejemplo, al menos un nombre de propiedad)
+            if (propertyData.isEmpty()) continue
 
-                // Crear el botón y establecer la ubicación como texto
-                val newButton = Button(this).apply {
-                    text = location // Asignar la ubicación como texto del botón
-                    layoutParams = LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                }
+            val descripcion = propertyData[0] // Obtener la descripción de la propiedad (alquiler)
 
-                // Establecer el listener para enviar los detalles de la propiedad a otra actividad
-                newButton.setOnClickListener {
-                    val intent = Intent(this@MainActivity3, PropertyDetailsActivity::class.java)
-                    intent.putExtra("propertyDetails", property) // Pasar toda la propiedad
-                    startActivity(intent)
-                }
-
-                // Agregar el nuevo botón al contenedor
-                buttonContainer.addView(newButton)
-            } else {
-                // Manejar caso donde la respuesta no tiene el formato esperado
-                Log.e("MainActivity3", "Formato de propiedad no válido: $property")
+            // Crear un nuevo botón
+            val newButton = Button(this).apply {
+                text = descripcion // Usar la descripción como texto del botón
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
             }
+
+            // Establecer el listener para enviar los detalles de la propiedad a otra actividad
+            newButton.setOnClickListener {
+                val intent = Intent(this@MainActivity3, PropertyDetailsActivity::class.java)
+                intent.putExtra("propertyDetails", cleanedProperty) // Pasar toda la propiedad
+                startActivity(intent)
+            }
+
+            // Agregar el nuevo botón al contenedor
+            buttonContainer.addView(newButton)
         }
     }
 
+
 }
+
 
