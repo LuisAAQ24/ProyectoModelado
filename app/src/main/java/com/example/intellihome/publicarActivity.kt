@@ -34,6 +34,14 @@ class publicarActivity : BaseActivity() {
     private lateinit var amenidadesSeleccionadasTextView: TextView
     var capacidadSeleccionada: Int = 0 // Variable para almacenar la capacidad seleccionada
 
+    // Variables para las fechas
+    private lateinit var fechaInicioButton: Button
+    private lateinit var fechaFinButton: Button
+    private lateinit var fechaInicioTexto: TextView
+    private lateinit var fechaFinTexto: TextView
+    private var fechaInicio: Calendar = Calendar.getInstance()
+    private var fechaFin: Calendar = Calendar.getInstance()
+
     private val amenidadesArray = arrayOf(
         "Wi-Fi gratuito", "Cocina equipada", "Aire acondicionado", "Calefacción",
         "Televisión por cable", "Equipo de lavandería", "Piscina", "Patio",
@@ -66,6 +74,11 @@ class publicarActivity : BaseActivity() {
         seek_bar_capacidad = findViewById(R.id.seek_bar_capacidad)
         amenidadesSeleccionadasTextView = findViewById(R.id.amenidades_seleccionadas_text_view)
 
+        fechaInicioButton = findViewById(R.id.fecha_inicio_button)
+        fechaFinButton = findViewById(R.id.fecha_fin_button)
+        fechaInicioTexto = findViewById(R.id.fecha_inicio_texto)
+        fechaFinTexto = findViewById(R.id.fecha_fin_texto)
+
         // Iniciar conexión al servidor
         socketViewModel.connectToServer("192.168.0.114", 6060)
 
@@ -92,6 +105,8 @@ class publicarActivity : BaseActivity() {
 
 
 
+
+
         seek_bar_capacidad.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 capacidadSeleccionada = progress
@@ -103,6 +118,23 @@ class publicarActivity : BaseActivity() {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
+        //-----------------------------------------------------------------------
+        fechaInicioButton.setOnClickListener {
+            mostrarDatePickerDialog(fechaInicio) { fechaSeleccionada ->
+                fechaInicio = fechaSeleccionada
+                actualizarFechaTexto(fechaInicioTexto, fechaInicio)
+                validarFechas()
+            }
+        }
+
+        fechaFinButton.setOnClickListener {
+            mostrarDatePickerDialog(fechaFin) { fechaSeleccionada ->
+                fechaFin = fechaSeleccionada
+                actualizarFechaTexto(fechaFinTexto, fechaFin)
+                validarFechas()
+            }
+        }
+        //---------------------------------------------------------------------------
 
 
 
@@ -133,10 +165,12 @@ class publicarActivity : BaseActivity() {
             showAmenidadesDialog()
         }
 
-        // Configurar listener para el botón "Finalizar"
         finalizarButton.setOnClickListener {
-            enviarDatosAlServidor()
+            if (validarCampos()) {
+                enviarDatosAlServidor()
+            }
         }
+
 
         // Restaurar el estado si fue guardado
         if (savedInstanceState != null) {
@@ -154,6 +188,41 @@ class publicarActivity : BaseActivity() {
             insets
         }
     }
+ //-------------------------------------------------------------------------------------------------------------------------------------------------------
+    private fun mostrarDatePickerDialog(
+        fecha: Calendar,
+        onFechaSeleccionada: (Calendar) -> Unit
+    ) {
+        val year = fecha.get(Calendar.YEAR)
+        val month = fecha.get(Calendar.MONTH)
+        val day = fecha.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            this,
+            { _, año, mes, dia ->
+                val fechaSeleccionada = Calendar.getInstance()
+                fechaSeleccionada.set(año, mes, dia)
+                onFechaSeleccionada(fechaSeleccionada)
+            },
+            year, month, day
+        )
+        datePickerDialog.show()
+    }
+
+    private fun actualizarFechaTexto(textView: TextView, fecha: Calendar) {
+        val formato = java.text.SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        textView.text = formato.format(fecha.time)
+    }
+
+    private fun validarFechas() {
+        if (fechaInicio.after(fechaFin)) {
+            Toast.makeText(this, "La fecha de inicio debe ser menor o igual a la fecha de fin", Toast.LENGTH_SHORT).show()
+            fechaFinTexto.text = "" // Limpia la fecha final si es incorrecta
+        }
+    }
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
     // Mostrar el diálogo de selección de amenidades
     private fun showAmenidadesDialog() {
@@ -187,14 +256,70 @@ class publicarActivity : BaseActivity() {
         val ubicacionTexto = ubicacionTexto.text.toString().ifBlank { "Ubicacion no proporcionada" }
         val precio = precioSeleccionado.toString()
         val amenidades = amenidadesSeleccionadasTextView.text.toString().ifBlank { "Sin amenidades" }
+        val Fecha1 = fechaInicioTexto.text.toString()
+        val Fecha2 = fechaFinTexto .text.toString()
 
         Log.d("publicarActivity", "Capacidad: $capacidad")
 
         // Formatear los datos como un String para enviar al servidor
-        return "publicar,$capacidad,[$ubicacionTexto],$amenidades,$precio"
+        return "publicar,$capacidad,[$ubicacionTexto],$amenidades,$precio,$Fecha1,$Fecha2"
 
 
     }
+
+    private fun validarCampos(): Boolean {
+        // Validar si la ubicación no está vacía
+        if (ubicacionTexto.text.isBlank()) {
+            Toast.makeText(this, "Debe seleccionar una ubicación", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        // Validar si el precio es mayor a 0
+        if (precioSeleccionado <= 0) {
+            Toast.makeText(this, "El precio por noche debe ser mayor a 0", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        // Validar si la capacidad es mayor a 0
+        if (capacidadSeleccionada <= 0) {
+            Toast.makeText(this, "La capacidad debe ser mayor a 0", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        // Validar que al menos una imagen haya sido seleccionada
+        if (imagenesSeleccionadas.isEmpty()) {
+            Toast.makeText(this, "Debe agregar al menos una imagen", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        // Validar que no haya más de 10 imágenes seleccionadas
+        if (imagenesSeleccionadas.size > IMAGENES_MAXIMAS) {
+            Toast.makeText(this, "No puede agregar más de 10 imágenes", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        // Validar que la fecha de inicio no esté vacía
+        if (fechaInicioTexto.text.isBlank()) {
+            Toast.makeText(this, "Debe seleccionar una fecha de inicio", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        // Validar que la fecha de fin no esté vacía
+        if (fechaFinTexto.text.isBlank()) {
+            Toast.makeText(this, "Debe seleccionar una fecha de fin", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        // Validar que la fecha de inicio sea menor o igual a la fecha de fin
+        if (fechaInicio.after(fechaFin)) {
+            Toast.makeText(this, "La fecha de inicio debe ser menor o igual a la fecha de fin", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        // Si todas las validaciones pasan, retorna true
+        return true
+    }
+
 
 
 
@@ -212,6 +337,10 @@ class publicarActivity : BaseActivity() {
 
         // Log para depuración en Logcat
         Log.d("publicarActivity", "Datos enviados: $datos")
+
+        val intent = Intent(this, MainActivity3::class.java)
+        startActivity(intent)
+        finish()
     }
 
 
@@ -227,29 +356,50 @@ class publicarActivity : BaseActivity() {
     // Recibir los datos de la ubicación del mapa y de las imágenes seleccionadas
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            val ubicacion = data?.getStringExtra("ubicacion")
-            ubicacionTexto.text = ubicacion // Mostrar la ubicación seleccionada
-        } else if (requestCode == 2 && resultCode == RESULT_OK && data != null) {
+
+        if (requestCode == 1 && resultCode == RESULT_OK) { // Verifica si es la ubicación
+            val ubicacion = data?.getStringExtra("ubicacion") // Obtén la ubicación
+            if (!ubicacion.isNullOrBlank()) {
+                ubicacionTexto.text = ubicacion // Muestra la ubicación en el TextView
+            }
+        } else if (requestCode == 2 && resultCode == RESULT_OK && data != null) { // Manejo de imágenes
+            val nuevasImagenes = mutableListOf<Uri>()
+
             if (data.clipData != null) { // Varias imágenes seleccionadas
-                for (i in 0 until data.clipData!!.itemCount) {
-                    if (imagenesSeleccionadas.size < IMAGENES_MAXIMAS) {
-                        val uri = data.clipData!!.getItemAt(i).uri
-                        imagenesSeleccionadas.add(uri)
-                        agregarImagenAlContenedor(uri)
-                    }
+                val totalItems = data.clipData!!.itemCount
+
+                // Verificar si la selección supera el límite de 10 imágenes
+                if (imagenesSeleccionadas.size + totalItems > IMAGENES_MAXIMAS) {
+                    Toast.makeText(this, "Solo puedes agregar hasta 10 imágenes", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                // Agregar cada imagen seleccionada a la lista temporal
+                for (i in 0 until totalItems) {
+                    val uri = data.clipData!!.getItemAt(i).uri
+                    nuevasImagenes.add(uri)
                 }
             } else if (data.data != null) { // Solo una imagen seleccionada
                 val uri = data.data
-                uri?.let {
-                    if (imagenesSeleccionadas.size < IMAGENES_MAXIMAS) {
-                        imagenesSeleccionadas.add(uri)
-                        agregarImagenAlContenedor(uri)
-                    }
+
+                // Verificar si agregar esta imagen supera el límite
+                if (imagenesSeleccionadas.size + 1 > IMAGENES_MAXIMAS) {
+                    Toast.makeText(this, "Solo puedes agregar hasta 10 imágenes", Toast.LENGTH_SHORT).show()
+                    return
                 }
+
+                uri?.let { nuevasImagenes.add(it) }
+            }
+
+            // Agregar las imágenes seleccionadas al contenedor si no superan el límite
+            nuevasImagenes.forEach { uri ->
+                imagenesSeleccionadas.add(uri)
+                agregarImagenAlContenedor(uri)
             }
         }
     }
+
+
 
     // Función para agregar la imagen seleccionada a un contenedor visual
     private fun agregarImagenAlContenedor(uri: Uri) {
