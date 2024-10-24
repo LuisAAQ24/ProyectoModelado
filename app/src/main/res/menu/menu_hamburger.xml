@@ -7,4 +7,9 @@
         android:id="@+id/menu_alquilar"
         android:title="Alquilar"
         android:icon="@drawable/alquilermenu" />
+
+    <item
+        android:id="@+id/menu_monitorear"
+        android:title="Monitorear Dispositivos"
+        android:icon="@drawable/dispositivos" />
 </menu>

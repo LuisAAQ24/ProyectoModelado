@@ -54,8 +54,7 @@ class MainActivity : BaseActivity() { // Cambiado a BaseActivity
             if (usuarioocoreo.isEmpty() || contraseña.isEmpty()) {
                 Toast.makeText(this, getString(R.string.res23), Toast.LENGTH_SHORT).show() // Mensaje de completar campos
             } else {
-                socketViewModel.sendMessage("login,$usuarioocoreo,$contraseña") // Enviar mensaje
-                println("Yo: $usuarioocoreo,$contraseña")
+                socketViewModel.sendMessage("login,$contraseña,$usuarioocoreo") // Enviar mensaje
             }
         }
 
@@ -67,7 +66,7 @@ class MainActivity : BaseActivity() { // Cambiado a BaseActivity
         }
 
         // Iniciar conexión al servidor
-        socketViewModel.connectToServer("192.168.0.114", 6060)
+        socketViewModel.connectToServer("172.18.116.167", 6060)
 
         // ver las respuestas del servidor
         socketViewModel.serverResponse.observe(this, Observer { response ->

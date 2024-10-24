@@ -1,5 +1,6 @@
 package com.example.intellihome
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -10,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ledsActivity : BaseActivity() {
     private lateinit var socketViewModel: SocketViewModel
@@ -22,7 +24,7 @@ class ledsActivity : BaseActivity() {
         setupWindowInsets()
 
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("172.18.51.181", 6060)
+        socketViewModel.connectToServer("172.18.116.167", 6060)
 
         setupButtons()
 
@@ -50,7 +52,24 @@ class ledsActivity : BaseActivity() {
         val btnSala = findViewById<Button>(R.id.btnSala)
         val btnCuarto2 = findViewById<Button>(R.id.btnCuarto2)
 
-
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    startActivity(Intent(this, MainActivity3::class.java))
+                    true
+                }
+                R.id.navigation_mapa -> {
+                    startActivity(Intent(this, MapActivity::class.java))
+                    true
+                }
+                R.id.navigation_otros -> {
+                    startActivity(Intent(this, MainActivity2::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
         // Configurando el comportamiento de cada botón
         btnBano2.setOnClickListener { sendMessageToServer("leds,LED1") }
         btnCuarto1.setOnClickListener { sendMessageToServer("leds,LED2") }

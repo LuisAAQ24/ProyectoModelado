@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -42,7 +43,7 @@
                 android:translationY="0dp" />
 
             <EditText
-                android:id="@+id/ubicacion_input"
+                android:id="@+id/descripcion_input"
                 android:layout_width="271dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ubicacion_texto"
@@ -56,7 +57,7 @@
                 android:id="@+id/reglas_input"
                 android:layout_width="269dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ubicacion_input"
+                android:layout_below="@+id/descripcion_input"
                 android:layout_marginTop="48dp"
                 android:hint="Ingrese las Reglas"
                 android:textColorHint="#808080"
@@ -109,7 +110,6 @@
                 android:translationX="45dp"
                 android:translationY="5dp" />
 
-
             <Button
                 android:id="@+id/amenidades_button"
                 android:layout_width="wrap_content"
@@ -142,10 +142,49 @@
                 android:scrollbars="vertical" />
 
             <Button
-                android:id="@+id/finalizar_button"
+                android:id="@+id/fechainicio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/contenedor_imagen"
+                android:layout_marginTop="21dp"
+                android:text="Seleccionar fecha de Inicio"
+                android:translationX="85dp"
+                android:translationY="00dp"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/fechainicio_texto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fechainicio_button"
+                android:layout_marginTop="1dp"
+                android:text=""
+                android:textSize="18sp"
+                android:translationX="85dp"
+                android:translationY="00dp" />
+            <Button
+                android:id="@+id/fechafin_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fechainicio_texto"
+                android:layout_marginTop="21dp"
+                android:text="Seleccionar fecha de fin"
+                android:translationX="85dp"
+                android:translationY="00dp" />
+            <TextView
+                android:id="@+id/fechafin_texto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fechafin_button"
+                android:layout_marginTop="1dp"
+                android:text=""
+                android:textSize="18sp"
+                android:translationX="85dp"
+                android:translationY="00dp"/>
+            <Button
+                android:id="@+id/finalizar_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fechafin_texto"
                 android:layout_marginTop="21dp"
                 android:text="Finalizar"
                 android:translationX="146dp"
@@ -161,12 +200,12 @@
                 android:translationX="30dp"
                 android:translationY="0dp" />
 
-
-
         </RelativeLayout>
     </ScrollView>
-</FrameLayout>
 
+
+
+</FrameLayout>
 
 
 

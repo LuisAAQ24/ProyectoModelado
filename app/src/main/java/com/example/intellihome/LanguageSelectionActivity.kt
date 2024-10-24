@@ -16,7 +16,7 @@ import android.widget.SeekBar
 import androidx.appcompat.widget.AppCompatButton
 import com.example.intellihome.utils.ThemeUtils
 
-class LanguageSelectionActivity : AppCompatActivity() {
+class LanguageSelectionActivity : BaseActivity() {
 
     private lateinit var languageSpinner: Spinner
     private lateinit var confirmButton: Button
@@ -33,8 +33,7 @@ class LanguageSelectionActivity : AppCompatActivity() {
         colorDisplay = findViewById(R.id.colorDisplay)
         selectColorButton = findViewById(R.id.selectColorButton)
         ThemeUtils.applyTheme(this)
-        //applyCustomColors()
-        // Configurar el Spinner con los idiomas
+
         val languages = arrayOf("Español", "Inglés", "Húngaro", "Portugués")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, languages)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

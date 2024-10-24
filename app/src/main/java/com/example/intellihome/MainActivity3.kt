@@ -35,7 +35,7 @@ class MainActivity3 : BaseActivity() {
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
 
         // Conectar al servidor
-        socketViewModel.connectToServer("172.18.51.181", 6060)
+        socketViewModel.connectToServer("172.18.116.167", 6060)
 
         // Contenedor donde se agregarán dinámicamente los botones
         buttonContainer = findViewById(R.id.button_container)
@@ -64,6 +64,11 @@ class MainActivity3 : BaseActivity() {
                 R.id.menu_alquilar -> {
                     val alquilar = Intent(this, alquilarActivity::class.java)
                     startActivity(alquilar)
+                    true
+                }
+                R.id.menu_monitorear -> {
+                    val leds = Intent(this, ledsActivity::class.java)
+                    startActivity(leds)
                     true
                 }
                 else -> false
@@ -117,10 +122,9 @@ class MainActivity3 : BaseActivity() {
 
             // Comprobar si el tamaño es correcto
             if (propertyData.size >= 5) { // Asegúrate de que hay al menos 5 elementos
-                val capacidad = propertyData[1] // Capacidad
-                val location = propertyData[2].removePrefix("[").removeSuffix("]") // Ubicación sin corchetes
-                val amenidades = propertyData[3] // Amenidades
-                val precio = propertyData[4] // Precio
+
+                val location = propertyData[0].removePrefix("[").removeSuffix("]") // Ubicación sin corchetes
+
 
                 // Crear el botón y establecer la ubicación como texto
                 val newButton = Button(this).apply {
