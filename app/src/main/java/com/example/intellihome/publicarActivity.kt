@@ -23,6 +23,8 @@ class publicarActivity : BaseActivity() {
     private lateinit var socketViewModel: SocketViewModel
     private lateinit var ubicacionInput: EditText
     private lateinit var capacidadInput: EditText
+    private lateinit var descripciónInput: EditText
+    private lateinit var reglasInput: EditText
     private lateinit var seek_bar_capacidad: SeekBar
     private lateinit var ubicacionTexto: TextView
     private lateinit var finalizarButton: Button
@@ -63,7 +65,7 @@ class publicarActivity : BaseActivity() {
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
 
         // Inicializar las vistas
-        ubicacionInput = findViewById(R.id.ubicacion_input)
+
         contenedorImagenes = findViewById(R.id.contenedor_imagen)
         ubicacionTexto = findViewById(R.id.ubicacion_texto)
         finalizarButton = findViewById(R.id.finalizar_button)
@@ -73,6 +75,8 @@ class publicarActivity : BaseActivity() {
         seekBarPrecio = findViewById(R.id.seek_bar_precio)
         seek_bar_capacidad = findViewById(R.id.seek_bar_capacidad)
         amenidadesSeleccionadasTextView = findViewById(R.id.amenidades_seleccionadas_text_view)
+        descripciónInput = findViewById(R.id.descripcion_input)
+        reglasInput = findViewById(R.id.reglas_input)
 
         fechaInicioButton = findViewById(R.id.fecha_inicio_button)
         fechaFinButton = findViewById(R.id.fecha_fin_button)
@@ -80,7 +84,7 @@ class publicarActivity : BaseActivity() {
         fechaFinTexto = findViewById(R.id.fecha_fin_texto)
 
         // Iniciar conexión al servidor
-        socketViewModel.connectToServer("192.168.0.114", 6060)
+        socketViewModel.connectToServer("172.18.116.167", 6060)
 
         // Ver las respuestas del servidor
         socketViewModel.serverResponse.observe(this, Observer { response ->
@@ -174,7 +178,6 @@ class publicarActivity : BaseActivity() {
 
         // Restaurar el estado si fue guardado
         if (savedInstanceState != null) {
-            ubicacionInput.setText(savedInstanceState.getString("ubicacion"))
             capacidadSeleccionada = savedInstanceState.getInt("capacidad", 0) // Restaurar capacidad
             capacidadInput.setText(capacidadSeleccionada.toString()) // Mostrar la capacidad restaurada
             seek_bar_capacidad.progress = capacidadSeleccionada // Ajustar el SeekBar
@@ -251,18 +254,22 @@ class publicarActivity : BaseActivity() {
     }
 
     private fun getDatosIngresados(): String {
-        val ubicacion = ubicacionInput.text.toString().ifBlank { "Sin ubicación" }
         val capacidad = capacidadSeleccionada.toString()
+        val descripcion = descripciónInput.text.toString()
+        val reglas = reglasInput.text.toString()
         val ubicacionTexto = ubicacionTexto.text.toString().ifBlank { "Ubicacion no proporcionada" }
         val precio = precioSeleccionado.toString()
         val amenidades = amenidadesSeleccionadasTextView.text.toString().ifBlank { "Sin amenidades" }
         val Fecha1 = fechaInicioTexto.text.toString()
         val Fecha2 = fechaFinTexto .text.toString()
 
+
         Log.d("publicarActivity", "Capacidad: $capacidad")
 
         // Formatear los datos como un String para enviar al servidor
+
         return "publicar,$capacidad,[$ubicacionTexto],$amenidades,$precio,$Fecha1,$Fecha2"
+
 
 
     }
@@ -347,7 +354,7 @@ class publicarActivity : BaseActivity() {
     // Guardar el estado actual antes de destruir la actividad
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("ubicacion", ubicacionInput.text.toString())
+        outState.putString("ubicacion", ubicacionTexto.text.toString())
         outState.putInt("capacidad", capacidadSeleccionada) // Guardar capacidad seleccionada
         outState.putString("ubicacionTexto", ubicacionTexto.text.toString())
     }

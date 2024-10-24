@@ -4,6 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
+    <TextView
+        android:id="@+id/descripcion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Descripción"/>
+    <TextView
+        android:id="@+id/capacidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Capacidad"/>
 
     <TextView
         android:id="@+id/ubicación"
@@ -22,6 +32,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Amenidades"/>
+    <TextView
+        android:id="@+id/reglas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reglas"/>
+
     <Button
         android:id="@+id/buttonRent"
         android:layout_width="wrap_content"
