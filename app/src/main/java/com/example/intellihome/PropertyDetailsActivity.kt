@@ -1,6 +1,5 @@
 package com.example.intellihome
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
@@ -11,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 
 class PropertyDetailsActivity : AppCompatActivity() {
 
-    private lateinit var sharedPreferences: SharedPreferences // Declara SharedPreferences
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var socketViewModel: SocketViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,26 +28,30 @@ class PropertyDetailsActivity : AppCompatActivity() {
         // Mostrar los detalles en la interfaz
         val propertyData = propertyDetails?.split(",")
         if (propertyData != null) {
-            findViewById<TextView>(R.id.ubicación).text = propertyData[1]  // Ubicación (índice 1)
-            findViewById<TextView>(R.id.precio).text = propertyData[5]    // Precio (índice 5)
-            findViewById<TextView>(R.id.amenidades).text = propertyData[4] // Amenidades (índice 4)
+            findViewById<TextView>(R.id.ubicación).text = propertyData[1]  // Ubicación
+            findViewById<TextView>(R.id.precio).text = propertyData[5]    // Precio
+            findViewById<TextView>(R.id.amenidades).text = propertyData[4] // Amenidades
         }
 
         // Configurar el botón "Alquilar"
-        val buttonRent = findViewById<Button>(R.id.buttonRent) // Asegúrate de que tengas un botón en tu layout con este ID
+        val buttonRent = findViewById<Button>(R.id.buttonRent)
         buttonRent.setOnClickListener {
-            // Recuperar la contraseña
-            val storedPassword = sharedPreferences.getString("password", null)
-            if (storedPassword != null) {
+            // Recuperar datos del usuario
+            val username = sharedPreferences.getString("username", null)
+            val phoneNumber = sharedPreferences.getString("phoneNumber", null)
+            val totalAmount = propertyData?.get(5) // Asumiendo que el monto total está en la posición 5
+
+            if (!username.isNullOrEmpty() && !phoneNumber.isNullOrEmpty() && totalAmount != null) {
                 // Construir el mensaje
-                val message = "alquilar,$storedPassword,$propertyDetails"
+                val message = "alquilar,$username,$phoneNumber,${propertyData[1]},$totalAmount"
 
                 // Enviar el mensaje a través del ViewModel
-                socketViewModel.sendMessage(message) // Envía el mensaje al servidor
-                // Para propósitos de demostración, muestra el mensaje
-                Toast.makeText(this, "Mensaje enviado: $message", Toast.LENGTH_SHORT).show()
+                socketViewModel.sendMessage(message)
+
+                // Mostrar mensaje de éxito
+                Toast.makeText(this, "Solicitud de alquiler enviada.", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "No se encontró la contraseña.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Faltan datos del usuario o detalles de la propiedad.", Toast.LENGTH_SHORT).show()
             }
         }
     }
