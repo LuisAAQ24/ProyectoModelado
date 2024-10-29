@@ -22,7 +22,7 @@ class PropertyDetailsActivity : BaseActivity() {
         // Inicializar SharedPreferences
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("172.18.51.181", 6060)
+        socketViewModel.connectToServer("172.18.116.167", 6060)
 
         // Obtener los detalles de la propiedad
         val propertyDetails = intent.getStringExtra("propertyDetails")

@@ -20,10 +20,13 @@ class ledsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_leds)
-
-        setupWindowInsets()
-
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
+        setupWindowInsets()
+        val btnBano2= findViewById<Button>(R.id.btnBano2)
+        val btnCuarto1 = findViewById<Button>(R.id.btnCuarto1)
+        val btnSala = findViewById<Button>(R.id.btnSala)
+        val btnCuarto2 = findViewById<Button>(R.id.btnCuarto2)
+
         socketViewModel.connectToServer("172.18.116.167", 6060)
 
         setupButtons()
@@ -31,6 +34,26 @@ class ledsActivity : BaseActivity() {
         socketViewModel.serverResponse.observe(this, Observer { response ->
             handleServerResponse(response)
         })
+        btnBano2.setOnClickListener {
+            socketViewModel.sendMessage("leds,LED1")
+            //setupColorToggle(btnBano2)
+            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
+        }
+        btnCuarto1.setOnClickListener {
+            //setupColorToggle(btnCuarto1)
+            socketViewModel.sendMessage("leds,LED2")
+            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
+        }
+        btnSala.setOnClickListener {
+            //setupColorToggle(btnSala)
+            socketViewModel.sendMessage("leds,LED3")
+            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()  }
+        btnCuarto2.setOnClickListener {
+            //setupColorToggle(btnCuarto2)
+            socketViewModel.sendMessage("leds,LED4")
+            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private fun setupWindowInsets() {
@@ -71,23 +94,13 @@ class ledsActivity : BaseActivity() {
             }
         }
         // Configurando el comportamiento de cada botón
-        btnBano2.setOnClickListener { sendMessageToServer("leds,LED1") }
-        btnCuarto1.setOnClickListener { sendMessageToServer("leds,LED2") }
-        btnSala.setOnClickListener { sendMessageToServer("leds,LED3") }
-        btnCuarto2.setOnClickListener { sendMessageToServer("leds,LED4") }
 
 
-        val buttons = listOf(btnBano2, btnCuarto1, btnSala, btnCuarto2)
-
-        buttons.forEach { button ->
-            setupColorToggle(button)
-        }
 
     }
 
     private fun setupColorToggle(button: Button) {
         var isGray = true
-
         button.setOnClickListener {
             val newBackground = if (isGray) {
                 R.drawable.yellow_button_background
