@@ -30,6 +30,7 @@ class PropertyDetailsActivity : BaseActivity() {
         // Mostrar los detalles en la interfaz
         val propertyData = propertyDetails?.split(",")
         if (propertyData != null) {
+
             findViewById<TextView>(R.id.descripcion).text = "Descripción: ${propertyData[0]}"
             findViewById<TextView>(R.id.capacidad).text = "Capacidad: ${propertyData[1]}"
             findViewById<TextView>(R.id.ubicacion).text = "Ubicación: ${propertyData[2]}"
@@ -38,6 +39,7 @@ class PropertyDetailsActivity : BaseActivity() {
             findViewById<TextView>(R.id.reglas).text = "Reglas: ${propertyData[5]}"
             findViewById<TextView>(R.id.fechafin).text = "Fecha de inicio: ${propertyData[6]}"
             findViewById<TextView>(R.id.fechainicio).text = "Fecha de fin: ${propertyData[7]}"
+
         }
 
         // Configurar el botón "Alquilar"

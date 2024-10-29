@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -77,8 +79,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     val addressList = geocoder.getFromLocation(selectedLocation.latitude, selectedLocation.longitude, 1)
                     if (addressList != null) {
                         if (addressList.isNotEmpty()) {
+
                             var address = addressList[0]?.getAddressLine(0)
                             address = address?.replace(",", " ")
+
                             // Devolver la ubicación seleccionada
                             val intent = Intent()
                             intent.putExtra("ubicacion", address)

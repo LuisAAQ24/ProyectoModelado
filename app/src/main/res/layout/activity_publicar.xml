@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="1dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,7 +13,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="3004dp"
+            android:padding="20dp">
 
             <Button
                 android:id="@+id/ubicacion_button"
@@ -145,6 +146,7 @@
                 android:id="@+id/fechainicio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:layout_below="@+id/contenedor_imagen"
                 android:layout_marginTop="21dp"
                 android:text="Seleccionar fecha de Inicio"
@@ -186,9 +188,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/fechafin_texto"
                 android:layout_marginTop="21dp"
+
                 android:text="Finalizar"
-                android:translationX="146dp"
-                android:translationY="00dp" />
+                android:translationX="136dp"
+                android:translationY="1dp" />
 
             <TextView
                 android:id="@+id/amenidades_seleccionadas_text_view"
@@ -199,6 +202,7 @@
                 android:text=""
                 android:translationX="30dp"
                 android:translationY="0dp" />
+
 
         </RelativeLayout>
     </ScrollView>

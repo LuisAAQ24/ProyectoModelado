@@ -49,6 +49,7 @@ class MainActivity3 : BaseActivity() {
 
         // Observar la respuesta del servidor
         socketViewModel.serverResponse.observe(this, Observer { response ->
+            Log.d("ServerResponse", response)
             handleServerResponse(response)
         })
 
@@ -117,6 +118,7 @@ class MainActivity3 : BaseActivity() {
         val propertyList = response.split("\n") // Separar por líneas
 
         for (property in propertyList) {
+
             // Separar los datos por coma
             val propertyData = property.split(",")
 
@@ -142,14 +144,20 @@ class MainActivity3 : BaseActivity() {
                     startActivity(intent)
                 }
 
-                // Agregar el nuevo botón al contenedor
-                buttonContainer.addView(newButton)
-            } else {
-                // Manejar caso donde la respuesta no tiene el formato esperado
-                Log.e("MainActivity3", "Formato de propiedad no válido: $property")
+
+            // Establecer el listener para enviar los detalles de la propiedad a otra actividad
+            newButton.setOnClickListener {
+                val intent = Intent(this@MainActivity3, PropertyDetailsActivity::class.java)
+                intent.putExtra("propertyDetails", cleanedProperty) // Pasar toda la propiedad
+                startActivity(intent)
             }
+
+            // Agregar el nuevo botón al contenedor
+            buttonContainer.addView(newButton)
         }
     }
 
+
 }
+
 
