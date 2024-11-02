@@ -58,6 +58,8 @@ class MainActivity : BaseActivity() { // Cambiado a BaseActivity
             }
         }
 
+        //2
+
         // Configuración del botón para ir al registro
         val botonregistro = findViewById<AppCompatButton>(R.id.botregistro)
         botonregistro.setOnClickListener {
