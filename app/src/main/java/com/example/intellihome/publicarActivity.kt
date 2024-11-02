@@ -52,7 +52,7 @@ class publicarActivity : BaseActivity() {
     )
 
     private val amenidadesSeleccionadas = BooleanArray(amenidadesArray.size) { false }
-
+//comentario random
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_publicar)
