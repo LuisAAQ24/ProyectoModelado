@@ -8,27 +8,44 @@
         android:id="@+id/descripcion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Descripción"/>
-    <TextView
-        android:id="@+id/capacidad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Capacidad"/>
+
+        android:text="Ubicación"/>
+
 
     <TextView
-        android:id="@+id/ubicación"
+        android:id="@+id/capacidad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ubicación"/>
 
     <TextView
+        android:id="@+id/ubicacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ubicación"/>
+    <TextView
+        android:id="@+id/amenidades"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Precio"/>
+    <TextView
         android:id="@+id/precio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Precio"/>
+    <TextView
+        android:id="@+id/reglas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Precio"/>
+    <TextView
+        android:id="@+id/fechainicio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Precio"/>
 
     <TextView
-        android:id="@+id/amenidades"
+        android:id="@+id/fechafin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Amenidades"/>

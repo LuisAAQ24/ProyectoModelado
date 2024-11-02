@@ -12,8 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import java.util.*
 import androidx.lifecycle.Observer
 import android.util.Log
-
-
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class publicarActivity : BaseActivity() {
     private val imagenesSeleccionadas = mutableListOf<Uri>() // Lista para almacenar las imágenes seleccionadas
@@ -21,9 +20,10 @@ class publicarActivity : BaseActivity() {
     private lateinit var contenedorImagenes: LinearLayout
     private val IMAGENES_MAXIMAS = 10
     private lateinit var socketViewModel: SocketViewModel
-    private lateinit var ubicacionInput: EditText
     private lateinit var capacidadInput: EditText
-    private lateinit var descripciónInput: EditText
+
+    private lateinit var descripcionInput: EditText
+
     private lateinit var reglasInput: EditText
     private lateinit var seek_bar_capacidad: SeekBar
     private lateinit var ubicacionTexto: TextView
@@ -35,6 +35,12 @@ class publicarActivity : BaseActivity() {
     private var precioSeleccionado: Int = 0
     private lateinit var amenidadesSeleccionadasTextView: TextView
     var capacidadSeleccionada: Int = 0 // Variable para almacenar la capacidad seleccionada
+    private lateinit var fechaInicioButton: Button
+    private lateinit var fechaFinButton: Button
+    private lateinit var fechaInicioTexto: TextView
+    private lateinit var fechaFinTexto: TextView
+    private var fechaInicio: Calendar = Calendar.getInstance()
+    private var fechaFin: Calendar = Calendar.getInstance()
 
     // Variables para las fechas
     private lateinit var fechaInicioButton: Button
@@ -68,7 +74,13 @@ class publicarActivity : BaseActivity() {
 
         contenedorImagenes = findViewById(R.id.contenedor_imagen)
         ubicacionTexto = findViewById(R.id.ubicacion_texto)
+        reglasInput = findViewById(R.id.reglas_input)
+        descripcionInput = findViewById(R.id.descripcion_input)
         finalizarButton = findViewById(R.id.finalizar_button)
+        fechaInicioButton = findViewById(R.id.fechainicio_button)
+        fechaFinButton = findViewById(R.id.fechafin_button)
+        fechaInicioTexto = findViewById(R.id.fechainicio_texto)
+        fechaFinTexto = findViewById(R.id.fechafin_texto)
         ubicacionButton = findViewById(R.id.ubicacion_button)
         amenidadesButton = findViewById(R.id.amenidades_button)
         precioTextView = findViewById(R.id.precio_text_view)
@@ -104,18 +116,13 @@ class publicarActivity : BaseActivity() {
         })
 
         // Inicialización del SeekBar y TextView de capacidad
-
         val capacidadTextView = findViewById<TextView>(R.id.capacidad_text_view)
-
-
-
 
 
         seek_bar_capacidad.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 capacidadSeleccionada = progress
-                findViewById<TextView>(R.id.capacidad_text_view).text =
-                    "Capacidad: $capacidadSeleccionada" // Actualiza el TextView
+                capacidadTextView.text = "Capacidad: $capacidadSeleccionada" // Actualiza el TextView
                 Log.d("publicarActivity", "Capacidad seleccionada: $capacidadSeleccionada")
             }
 
@@ -140,8 +147,6 @@ class publicarActivity : BaseActivity() {
         }
         //---------------------------------------------------------------------------
 
-
-
         // Configuración del botón para agregar imágenes
         botonAgregarImagen = findViewById(R.id.agregar_imagen)
         contenedorImagenes = findViewById(R.id.contenedor_imagen)
@@ -158,10 +163,11 @@ class publicarActivity : BaseActivity() {
             }
         }
 
+
         // Configurar listener para abrir el mapa
         ubicacionButton.setOnClickListener {
             val intent = Intent(this, MapActivity::class.java)
-            startActivityForResult(intent, 1) // Request code 1 para el mapa
+            startActivityForResult(intent, 1)
         }
 
         // Configurar listener para el botón de selección de amenidades
@@ -169,9 +175,29 @@ class publicarActivity : BaseActivity() {
             showAmenidadesDialog()
         }
 
+
+        // Configurar listener para el botón "Finalizar"
+
         finalizarButton.setOnClickListener {
-            if (validarCampos()) {
-                enviarDatosAlServidor()
+            enviarDatosAlServidor()
+
+        }
+
+        // Configurar DatePicker para seleccionar fechas
+        fechaInicioButton.setOnClickListener {
+            mostrarDatePickerDialog(fechaInicio) { fechaSeleccionada ->
+                fechaInicio = fechaSeleccionada
+                actualizarFechaTexto(fechaInicioTexto, fechaInicio)
+                validarFechas()
+            }
+        }
+
+        fechaFinButton.setOnClickListener {
+            mostrarDatePickerDialog(fechaFin) { fechaSeleccionada ->
+                fechaFin = fechaSeleccionada
+                actualizarFechaTexto(fechaFinTexto, fechaFin)
+                validarFechas()
+
             }
         }
 
@@ -250,7 +276,7 @@ class publicarActivity : BaseActivity() {
                 amenidadesSeleccionadasTexto.add(amenidadesArray[i])
             }
         }
-        amenidadesSeleccionadasTextView.text = amenidadesSeleccionadasTexto.joinToString(", ")
+        amenidadesSeleccionadasTextView.text = amenidadesSeleccionadasTexto.joinToString(" ")
     }
 
     private fun getDatosIngresados(): String {
@@ -258,141 +284,135 @@ class publicarActivity : BaseActivity() {
         val descripcion = descripciónInput.text.toString()
         val reglas = reglasInput.text.toString()
         val ubicacionTexto = ubicacionTexto.text.toString().ifBlank { "Ubicacion no proporcionada" }
-        val precio = precioSeleccionado.toString()
-        val amenidades = amenidadesSeleccionadasTextView.text.toString().ifBlank { "Sin amenidades" }
-        val Fecha1 = fechaInicioTexto.text.toString()
-        val Fecha2 = fechaFinTexto .text.toString()
 
+        val descripcion = descripcionInput.text.toString()
+        val reglas = reglasInput.text.toString()
+        val amenidades = amenidadesSeleccionadasTextView.text.toString()
+        var precio = precioSeleccionado.toString()
 
-        Log.d("publicarActivity", "Capacidad: $capacidad")
-
-        // Formatear los datos como un String para enviar al servidor
-
-        return "publicar,$capacidad,[$ubicacionTexto],$amenidades,$precio,$Fecha1,$Fecha2"
-
-
-
+        val formatoFecha = java.text.SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val fechaInicioString = formatoFecha.format(fechaInicio.time)
+        val fechaFinString = formatoFecha.format(fechaFin.time)
+        val diaInicio = fechaInicio.get(Calendar.DAY_OF_MONTH)
+        val mesInicio = fechaInicio.get(Calendar.MONTH) + 1
+        val nuevaCantidad = calcularNuevaCantidad(diaInicio, mesInicio, 13.0, 2.0, precioSeleccionado.toDouble())
+        Toast.makeText(this, "Cantidad ajustada: $nuevaCantidad", Toast.LENGTH_SHORT).show()
+        return "publicar,$descripcion,$capacidad,$ubicacionTexto,$amenidades,$nuevaCantidad,$reglas,$fechaInicioString,$fechaFinString"
     }
 
+
+    private fun enviarDatosAlServidor() {
+        if (validarCampos()) {
+            val datos = getDatosIngresados()
+            socketViewModel.sendMessage(datos)
+            val intent = Intent(this, MainActivity3::class.java)
+            startActivity(intent)
+        }
+    }
+
+
     private fun validarCampos(): Boolean {
-        // Validar si la ubicación no está vacía
+        if (descripcionInput.text.isBlank()) {
+            Toast.makeText(this, "Debe ingresar una descripción", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+
+        if (reglasInput.text.isBlank()) {
+            Toast.makeText(this, "Debe ingresar las reglas", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
         if (ubicacionTexto.text.isBlank()) {
             Toast.makeText(this, "Debe seleccionar una ubicación", Toast.LENGTH_SHORT).show()
             return false
         }
 
-        // Validar si el precio es mayor a 0
-        if (precioSeleccionado <= 0) {
-            Toast.makeText(this, "El precio por noche debe ser mayor a 0", Toast.LENGTH_SHORT).show()
-            return false
-        }
 
-        // Validar si la capacidad es mayor a 0
-        if (capacidadSeleccionada <= 0) {
-            Toast.makeText(this, "La capacidad debe ser mayor a 0", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        // Validar que al menos una imagen haya sido seleccionada
-        if (imagenesSeleccionadas.isEmpty()) {
-            Toast.makeText(this, "Debe agregar al menos una imagen", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        // Validar que no haya más de 10 imágenes seleccionadas
-        if (imagenesSeleccionadas.size > IMAGENES_MAXIMAS) {
-            Toast.makeText(this, "No puede agregar más de 10 imágenes", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        // Validar que la fecha de inicio no esté vacía
-        if (fechaInicioTexto.text.isBlank()) {
-            Toast.makeText(this, "Debe seleccionar una fecha de inicio", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        // Validar que la fecha de fin no esté vacía
-        if (fechaFinTexto.text.isBlank()) {
-            Toast.makeText(this, "Debe seleccionar una fecha de fin", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        // Validar que la fecha de inicio sea menor o igual a la fecha de fin
-        if (fechaInicio.after(fechaFin)) {
-            Toast.makeText(this, "La fecha de inicio debe ser menor o igual a la fecha de fin", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        // Si todas las validaciones pasan, retorna true
         return true
     }
 
 
-
-
-
-
-    // Función para enviar los datos al servidor
-    private fun enviarDatosAlServidor() {
-        val datos = getDatosIngresados()  // Obtener los datos
-
-        // Enviar el mensaje a través del ViewModel
-        socketViewModel.sendMessage(datos)
-
-        // Mostrar un Toast para confirmar que se está intentando enviar los datos
-        Toast.makeText(this, "Datos enviados: $datos", Toast.LENGTH_SHORT).show()
-
-        // Log para depuración en Logcat
-        Log.d("publicarActivity", "Datos enviados: $datos")
-
-        val intent = Intent(this, MainActivity3::class.java)
-        startActivity(intent)
-        finish()
+    private fun mostrarDatePickerDialog(calendar: Calendar, callback: (Calendar) -> Unit) {
+        val datePicker = DatePickerDialog(
+            this,
+            { _, year, month, dayOfMonth ->
+                val nuevaFecha = Calendar.getInstance()
+                nuevaFecha.set(year, month, dayOfMonth)
+                callback(nuevaFecha)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePicker.show()
     }
 
+    private fun actualizarFechaTexto(textView: TextView, calendar: Calendar) {
+        val formatoFecha = java.text.SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        textView.text = formatoFecha.format(calendar.time)
+    }
 
-    // Guardar el estado actual antes de destruir la actividad
+    private fun validarFechas() {
+        if (fechaInicio.after(fechaFin)) {
+            Toast.makeText(this, "La fecha de inicio no puede ser posterior a la fecha de fin", Toast.LENGTH_SHORT).show()
+        }
+    }
+    fun calcularNuevaCantidad(dia: Int, mes: Int, porcentajeImpuesto: Double, comision: Double, montoTotal: Double): Double {
+        val limiteMaximo = 0.10 * montoTotal
+        var mediaArmonica: Double
+
+        // Calcular la media armónica
+        if (porcentajeImpuesto + comision > 0) {
+            mediaArmonica = 2 / ((1 / porcentajeImpuesto) + (1 / comision))
+        } else {
+            mediaArmonica = 0.0
+        }
+
+        // Calcular el factor de ajuste
+        val factorAjuste = (dia + mes) / 100.0
+
+        // Ajustar la media armónica
+        var mediaArmonicaAjustada = mediaArmonica * factorAjuste
+
+        // Asegurarse de que no exceda el límite
+        if (mediaArmonicaAjustada > limiteMaximo) {
+            mediaArmonicaAjustada = limiteMaximo
+        }
+
+
+        return mediaArmonicaAjustada
+
+    }
+
+    private fun handleServerResponse(response: String) {
+        // Procesar la respuesta del servidor aquí
+        Toast.makeText(this, "Respuesta del servidor: $response", Toast.LENGTH_SHORT).show()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString("ubicacion", ubicacionTexto.text.toString())
-        outState.putInt("capacidad", capacidadSeleccionada) // Guardar capacidad seleccionada
+
+        outState.putInt("capacidad", capacidadSeleccionada)
+
         outState.putString("ubicacionTexto", ubicacionTexto.text.toString())
     }
 
-
-    // Recibir los datos de la ubicación del mapa y de las imágenes seleccionadas
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 1 && resultCode == RESULT_OK) { // Verifica si es la ubicación
-            val ubicacion = data?.getStringExtra("ubicacion") // Obtén la ubicación
-            if (!ubicacion.isNullOrBlank()) {
-                ubicacionTexto.text = ubicacion // Muestra la ubicación en el TextView
-            }
-        } else if (requestCode == 2 && resultCode == RESULT_OK && data != null) { // Manejo de imágenes
-            val nuevasImagenes = mutableListOf<Uri>()
 
-            if (data.clipData != null) { // Varias imágenes seleccionadas
-                val totalItems = data.clipData!!.itemCount
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            val ubicacion = data?.getStringExtra("ubicacion") ?: ""
+            ubicacionTexto.text = ubicacion
+        } else if (requestCode == 2 && resultCode == RESULT_OK) {
+            data?.data?.let { uri ->
+                if (imagenesSeleccionadas.size < IMAGENES_MAXIMAS) {
+                    imagenesSeleccionadas.add(uri)
+                    val imageView = ImageView(this)
+                    imageView.setImageURI(uri)
+                    contenedorImagenes.addView(imageView)
 
-                // Verificar si la selección supera el límite de 10 imágenes
-                if (imagenesSeleccionadas.size + totalItems > IMAGENES_MAXIMAS) {
-                    Toast.makeText(this, "Solo puedes agregar hasta 10 imágenes", Toast.LENGTH_SHORT).show()
-                    return
-                }
-
-                // Agregar cada imagen seleccionada a la lista temporal
-                for (i in 0 until totalItems) {
-                    val uri = data.clipData!!.getItemAt(i).uri
-                    nuevasImagenes.add(uri)
-                }
-            } else if (data.data != null) { // Solo una imagen seleccionada
-                val uri = data.data
-
-                // Verificar si agregar esta imagen supera el límite
-                if (imagenesSeleccionadas.size + 1 > IMAGENES_MAXIMAS) {
-                    Toast.makeText(this, "Solo puedes agregar hasta 10 imágenes", Toast.LENGTH_SHORT).show()
-                    return
                 }
 
                 uri?.let { nuevasImagenes.add(it) }
@@ -406,19 +426,6 @@ class publicarActivity : BaseActivity() {
         }
     }
 
-
-
-    // Función para agregar la imagen seleccionada a un contenedor visual
-    private fun agregarImagenAlContenedor(uri: Uri) {
-        val imageView = ImageView(this)
-        imageView.setImageURI(uri)
-        imageView.layoutParams = LinearLayout.LayoutParams(200, 200)
-        contenedorImagenes.addView(imageView) // Agregar la imagen al contenedor
-    }
-
-    // Manejar las respuestas del servidor
-    private fun handleServerResponse(response: String) {
-        // Aquí puedes manejar la respuesta del servidor según sea necesario
-    }
 }
+
 

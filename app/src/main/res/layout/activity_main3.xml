@@ -35,10 +35,10 @@
             android:id="@+id/button_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Refrescar"
-            android:layout_below="@id/button_container"
+            android:background="@drawable/actualizar2"
             android:layout_marginTop="16dp"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:gravity="left"/>
 
         <!-- Barra de navegación inferior -->
         <com.google.android.material.bottomnavigation.BottomNavigationView

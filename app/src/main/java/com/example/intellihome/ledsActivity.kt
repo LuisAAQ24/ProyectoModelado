@@ -1,5 +1,6 @@
 package com.example.intellihome
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -10,6 +11,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ledsActivity : BaseActivity() {
     private lateinit var socketViewModel: SocketViewModel
@@ -18,17 +20,40 @@ class ledsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_leds)
-
-        setupWindowInsets()
-
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("172.18.51.181", 6060)
+        setupWindowInsets()
+        val btnBano2= findViewById<Button>(R.id.btnBano2)
+        val btnCuarto1 = findViewById<Button>(R.id.btnCuarto1)
+        val btnSala = findViewById<Button>(R.id.btnSala)
+        val btnCuarto2 = findViewById<Button>(R.id.btnCuarto2)
+
+        socketViewModel.connectToServer("172.18.116.167", 6060)
 
         setupButtons()
 
         socketViewModel.serverResponse.observe(this, Observer { response ->
             handleServerResponse(response)
         })
+        btnBano2.setOnClickListener {
+            socketViewModel.sendMessage("leds,LED1")
+            //setupColorToggle(btnBano2)
+            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
+        }
+        btnCuarto1.setOnClickListener {
+            //setupColorToggle(btnCuarto1)
+            socketViewModel.sendMessage("leds,LED2")
+            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
+        }
+        btnSala.setOnClickListener {
+            //setupColorToggle(btnSala)
+            socketViewModel.sendMessage("leds,LED3")
+            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()  }
+        btnCuarto2.setOnClickListener {
+            //setupColorToggle(btnCuarto2)
+            socketViewModel.sendMessage("leds,LED4")
+            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private fun setupWindowInsets() {
@@ -50,25 +75,32 @@ class ledsActivity : BaseActivity() {
         val btnSala = findViewById<Button>(R.id.btnSala)
         val btnCuarto2 = findViewById<Button>(R.id.btnCuarto2)
 
-
-        // Configurando el comportamiento de cada botón
-        btnBano2.setOnClickListener { sendMessageToServer("leds,LED1") }
-        btnCuarto1.setOnClickListener { sendMessageToServer("leds,LED2") }
-        btnSala.setOnClickListener { sendMessageToServer("leds,LED3") }
-        btnCuarto2.setOnClickListener { sendMessageToServer("leds,LED4") }
-
-
-        val buttons = listOf(btnBano2, btnCuarto1, btnSala, btnCuarto2)
-
-        buttons.forEach { button ->
-            setupColorToggle(button)
+        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    startActivity(Intent(this, MainActivity3::class.java))
+                    true
+                }
+                R.id.navigation_mapa -> {
+                    startActivity(Intent(this, MapActivity::class.java))
+                    true
+                }
+                R.id.navigation_otros -> {
+                    startActivity(Intent(this, MainActivity2::class.java))
+                    true
+                }
+                else -> false
+            }
         }
+        // Configurando el comportamiento de cada botón
+
+
 
     }
 
     private fun setupColorToggle(button: Button) {
         var isGray = true
-
         button.setOnClickListener {
             val newBackground = if (isGray) {
                 R.drawable.yellow_button_background

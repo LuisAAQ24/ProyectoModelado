@@ -67,6 +67,11 @@ class MainActivity3 : BaseActivity() {
                     startActivity(alquilar)
                     true
                 }
+                R.id.menu_monitorear -> {
+                    val leds = Intent(this, ledsActivity::class.java)
+                    startActivity(leds)
+                    true
+                }
                 else -> false
             }
         }
@@ -113,23 +118,32 @@ class MainActivity3 : BaseActivity() {
         val propertyList = response.split("\n") // Separar por líneas
 
         for (property in propertyList) {
-            // Limpiar las comillas y separar los datos por coma
-            val cleanedProperty = property.replace("\"", "").trim() // Quitar comillas y espacios
-            val propertyData = cleanedProperty.split(",")
 
-            // Asegúrate de que haya suficientes datos (por ejemplo, al menos un nombre de propiedad)
-            if (propertyData.isEmpty()) continue
+            // Separar los datos por coma
+            val propertyData = property.split(",")
 
-            val descripcion = propertyData[0] // Obtener la descripción de la propiedad (alquiler)
+            // Comprobar si el tamaño es correcto
+            if (propertyData.size >= 5) { // Asegúrate de que hay al menos 5 elementos
 
-            // Crear un nuevo botón
-            val newButton = Button(this).apply {
-                text = descripcion // Usar la descripción como texto del botón
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-            }
+                val location = propertyData[0].removePrefix("[").removeSuffix("]") // Ubicación sin corchetes
+
+
+                // Crear el botón y establecer la ubicación como texto
+                val newButton = Button(this).apply {
+                    text = location // Asignar la ubicación como texto del botón
+                    layoutParams = LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                }
+
+                // Establecer el listener para enviar los detalles de la propiedad a otra actividad
+                newButton.setOnClickListener {
+                    val intent = Intent(this@MainActivity3, PropertyDetailsActivity::class.java)
+                    intent.putExtra("propertyDetails", property) // Pasar toda la propiedad
+                    startActivity(intent)
+                }
+
 
             // Establecer el listener para enviar los detalles de la propiedad a otra actividad
             newButton.setOnClickListener {

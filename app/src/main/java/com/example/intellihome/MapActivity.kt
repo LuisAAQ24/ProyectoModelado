@@ -79,7 +79,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     val addressList = geocoder.getFromLocation(selectedLocation.latitude, selectedLocation.longitude, 1)
                     if (addressList != null) {
                         if (addressList.isNotEmpty()) {
-                            val address = addressList[0]?.getAddressLine(0)?.replace(",", "")
+
+                            var address = addressList[0]?.getAddressLine(0)
+                            address = address?.replace(",", " ")
 
                             // Devolver la ubicación seleccionada
                             val intent = Intent()

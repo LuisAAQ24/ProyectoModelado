@@ -25,7 +25,7 @@ class MainActivity4 : BaseActivity() {
         ThemeUtils.applyTheme(this)
         //applyCustomColors()
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("192.168.0.114", 6060)
+        socketViewModel.connectToServer("172.18.116.167", 6060)
         socketViewModel.serverResponse.observe(this, Observer { response ->
             handleServerResponse(response)
         })
@@ -41,13 +41,14 @@ class MainActivity4 : BaseActivity() {
             val correo = email.text.toString()
             val contrasena = nueva.text.toString()
             if (!isContrasenaValida(contrasena)){
-                Toast.makeText(this, getString(R.string.res25), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "formato incorrecto", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
             if (correo.isEmpty() || contrasena.isEmpty()) {
-                Toast.makeText(this, getString(R.string.res23), Toast.LENGTH_SHORT).show() // Mensaje de completar campos
+                Toast.makeText(this, "complete ambos campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             } else {
                 socketViewModel.sendMessage("configuracion,$correo,$contrasena") // Enviar mensaje
-                println("Yo: $correo,$contrasena")
             }
 
         }

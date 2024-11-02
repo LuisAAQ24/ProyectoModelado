@@ -22,7 +22,7 @@ class PropertyDetailsActivity : BaseActivity() {
         // Inicializar SharedPreferences
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("172.18.51.181", 6060)
+        socketViewModel.connectToServer("172.18.116.167", 6060)
 
         // Obtener los detalles de la propiedad
         val propertyDetails = intent.getStringExtra("propertyDetails")
@@ -30,12 +30,16 @@ class PropertyDetailsActivity : BaseActivity() {
         // Mostrar los detalles en la interfaz
         val propertyData = propertyDetails?.split(",")
         if (propertyData != null) {
-            findViewById<TextView>(R.id.reglas).text = "Reglas: ${propertyData[5]}"
+
             findViewById<TextView>(R.id.descripcion).text = "Descripción: ${propertyData[0]}"
             findViewById<TextView>(R.id.capacidad).text = "Capacidad: ${propertyData[1]}"
-            findViewById<TextView>(R.id.ubicación).text = "Ubicación: ${propertyData[2]}"  // Ubicación (índice 1)
-            findViewById<TextView>(R.id.precio).text = "Precio: ${propertyData[4]}"    // Precio (índice 5)
-            findViewById<TextView>(R.id.amenidades).text = "Amenidades: ${propertyData[3]}"// Amenidades (índice 4)
+            findViewById<TextView>(R.id.ubicacion).text = "Ubicación: ${propertyData[2]}"
+            findViewById<TextView>(R.id.amenidades).text = "Amenidades: ${propertyData[3]}"
+            findViewById<TextView>(R.id.precio).text = "Precio: ${propertyData[4]}"
+            findViewById<TextView>(R.id.reglas).text = "Reglas: ${propertyData[5]}"
+            findViewById<TextView>(R.id.fechafin).text = "Fecha de inicio: ${propertyData[6]}"
+            findViewById<TextView>(R.id.fechainicio).text = "Fecha de fin: ${propertyData[7]}"
+
         }
 
         // Configurar el botón "Alquilar"
