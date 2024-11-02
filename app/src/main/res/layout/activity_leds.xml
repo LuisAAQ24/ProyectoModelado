@@ -30,112 +30,123 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSala"
-        android:layout_width="125dp"
-        android:layout_height="100dp"
-        android:layout_x="258dp"
-        android:layout_y="107dp"
+        android:layout_width="104dp"
+        android:layout_height="107dp"
+        android:layout_x="295dp"
+        android:layout_y="112dp"
         android:background="@drawable/gray_button_background"
-        android:text="Sala"
+        android:text=""
         android:textColor="#000000"
         android:textSize="18sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnBano2"
-        android:layout_width="91dp"
-        android:layout_height="40dp"
-        android:layout_x="173dp"
-        android:layout_y="265dp"
-        android:background="@drawable/yellow_button_background"
-        android:text="Baño 2"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_x="195dp"
+        android:layout_y="297dp"
+        android:background="@drawable/gray_button_background"
+        android:text=" "
         android:textColor="#000000"
         android:textSize="16sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/LivingRoom"
-        android:layout_width="64dp"
-        android:layout_height="80dp"
-        android:layout_x="71dp"
-        android:layout_y="107dp"
+        android:layout_width="76dp"
+        android:layout_height="73dp"
+        android:layout_x="119dp"
+        android:layout_y="115dp"
         android:background="@drawable/gray_button_background"
-        android:text="Living Room"
+        android:text=" "
         android:textColor="#000000" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnBano1"
         android:layout_width="37dp"
-        android:layout_height="80dp"
-        android:layout_x="39dp"
-        android:layout_y="107dp"
+        android:layout_height="72dp"
+        android:layout_x="81dp"
+        android:layout_y="113dp"
         android:background="@drawable/gray_button_background"
-        android:text="B        a        ñ        o          1"
+        android:text=" "
         android:textColor="#000000"
         android:textSize="12sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Pasillo"
-        android:layout_width="44dp"
-        android:layout_height="103dp"
-        android:layout_x="131dp"
-        android:layout_y="202dp"
+        android:layout_width="39dp"
+        android:layout_height="135dp"
+        android:layout_x="159dp"
+        android:layout_y="189dp"
         android:background="@drawable/gray_button_background"
-        android:text="P              a                     s                i                l                 l               o"
+        android:text=""
         android:textColor="#000000"
         android:textSize="10sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCocina"
-        android:layout_width="130dp"
-        android:layout_height="99dp"
-        android:layout_x="134dp"
-        android:layout_y="107dp"
+        android:layout_width="99dp"
+        android:layout_height="107dp"
+        android:layout_x="197dp"
+        android:layout_y="112dp"
         android:background="@drawable/gray_button_background"
-        android:text="Cocina"
+        android:text=""
         android:textColor="#000000"
         android:textSize="18sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCuarto1"
-        android:layout_width="91dp"
-        android:layout_height="63dp"
-        android:layout_x="173dp"
-        android:layout_y="205dp"
+        android:layout_width="101dp"
+        android:layout_height="76dp"
+        android:layout_x="196dp"
+        android:layout_y="220dp"
         android:background="@drawable/gray_button_background"
-        android:text="Cuarto1"
+        android:text=""
         android:textColor="#000000"
         android:textSize="16sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Cuarto3"
-        android:layout_width="97dp"
-        android:layout_height="60dp"
-        android:layout_x="38dp"
-        android:layout_y="245dp"
+        android:layout_width="76dp"
+        android:layout_height="69dp"
+        android:layout_x="81dp"
+        android:layout_y="254dp"
         android:background="@drawable/gray_button_background"
-        android:text="Cuarto3"
+        android:text=""
         android:textColor="#000000"
         android:textSize="16sp" />
 
+    <ImageView
+        android:id="@+id/myImageView"
+        android:layout_width="409dp"
+        android:layout_height="400dp"
+        android:layout_x="10dp"
+        android:layout_y="30dp"
+        android:src="@drawable/casa" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCuarto2"
-        android:layout_width="97dp"
+        android:layout_width="76dp"
         android:layout_height="63dp"
-        android:layout_x="38dp"
-        android:layout_y="184dp"
-        android:background="@drawable/yellow_button_background"
-        android:text="Cuarto2"
+        android:layout_x="81dp"
+        android:layout_y="188dp"
+        android:background="@drawable/gray_button_background"
+        android:text=""
         android:textColor="#000000"
         android:textSize="16sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCochera"
-        android:layout_width="120dp"
-        android:layout_height="100dp"
-        android:layout_x="263dp"
-        android:layout_y="205dp"
+        android:layout_width="104dp"
+        android:layout_height="107dp"
+        android:layout_x="298dp"
+        android:layout_y="219dp"
         android:background="@drawable/gray_button_background"
-        android:text="Cochera"
+        android:text=""
         android:textColor="#000000"
         android:textSize="18sp" />
+
+
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -148,8 +159,6 @@
         app:menu="@menu/bottom_navigation_menu" />
 
 </AbsoluteLayout>
-
-
 
 
 

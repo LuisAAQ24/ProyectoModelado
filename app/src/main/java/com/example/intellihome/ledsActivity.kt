@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.widget.ImageView
 
 class ledsActivity : BaseActivity() {
     private lateinit var socketViewModel: SocketViewModel
@@ -53,6 +54,13 @@ class ledsActivity : BaseActivity() {
             socketViewModel.sendMessage("leds,LED4")
             Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
         }
+
+        // Referencia al ImageView
+        val myImageView = findViewById<ImageView>(R.id.myImageView)
+
+
+// Establecer la imagen programáticamente
+        myImageView.setImageResource(R.drawable.casa)
 
     }
 

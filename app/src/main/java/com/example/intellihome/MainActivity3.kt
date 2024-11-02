@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -118,7 +117,6 @@ class MainActivity3 : BaseActivity() {
         val propertyList = response.split("\n") // Separar por líneas
 
         for (property in propertyList) {
-
             // Separar los datos por coma
             val propertyData = property.split(",")
 
@@ -126,7 +124,6 @@ class MainActivity3 : BaseActivity() {
             if (propertyData.size >= 5) { // Asegúrate de que hay al menos 5 elementos
 
                 val location = propertyData[0].removePrefix("[").removeSuffix("]") // Ubicación sin corchetes
-
 
                 // Crear el botón y establecer la ubicación como texto
                 val newButton = Button(this).apply {
@@ -144,20 +141,11 @@ class MainActivity3 : BaseActivity() {
                     startActivity(intent)
                 }
 
-
-            // Establecer el listener para enviar los detalles de la propiedad a otra actividad
-            newButton.setOnClickListener {
-                val intent = Intent(this@MainActivity3, PropertyDetailsActivity::class.java)
-                intent.putExtra("propertyDetails", cleanedProperty) // Pasar toda la propiedad
-                startActivity(intent)
+                // Agregar el nuevo botón al contenedor
+                buttonContainer.addView(newButton)
             }
-
-            // Agregar el nuevo botón al contenedor
-            buttonContainer.addView(newButton)
         }
     }
-
-
 }
 
 
