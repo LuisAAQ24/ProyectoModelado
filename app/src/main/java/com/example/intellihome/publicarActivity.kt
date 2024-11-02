@@ -89,7 +89,7 @@ class publicarActivity : BaseActivity() {
         seekBarPrecio.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 precioSeleccionado = progress // Almacenar el precio seleccionado
-                precioTextView.text = "Precio: $$precioSeleccionado" // Actualizar el texto
+                precioTextView.text = "Precio: $precioSeleccionado" // Actualizar el texto
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
