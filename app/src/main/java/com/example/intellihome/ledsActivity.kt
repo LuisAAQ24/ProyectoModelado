@@ -19,7 +19,7 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 
-
+//2
 class ledsActivity : BaseActivity() {
     private lateinit var socketViewModel: SocketViewModel
     private lateinit var cuadroParpadeante: View
