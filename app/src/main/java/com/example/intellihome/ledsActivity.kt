@@ -1,68 +1,142 @@
 package com.example.intellihome
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import android.widget.ImageView
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
+
 
 class ledsActivity : BaseActivity() {
     private lateinit var socketViewModel: SocketViewModel
-
+    private lateinit var cuadroParpadeante: View
+    private lateinit var handler: Handler
+    private var isFlashing = false
+    private lateinit var runnable: Runnable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_leds)
+
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
         setupWindowInsets()
-        val btnBano2= findViewById<Button>(R.id.btnBano2)
+
+        // Botones
+        val btnBano2 = findViewById<Button>(R.id.btnBano2)
         val btnCuarto1 = findViewById<Button>(R.id.btnCuarto1)
         val btnSala = findViewById<Button>(R.id.btnSala)
         val btnCuarto2 = findViewById<Button>(R.id.btnCuarto2)
+        val btnLuces = findViewById<Button>(R.id.btnluces)
+        val retrocederButton = findViewById<Button>(R.id.retrocederhome)
+        val myImageView = findViewById<ImageView>(R.id.myImageView)
+        val btnAutenticacion = findViewById<Button>(R.id.btnAutenticacion) // Nuevo botón de autenticación
 
+        // Configura conexión de socket
         socketViewModel.connectToServer("172.18.116.167", 6060)
-
         setupButtons()
 
+        // Imagen programática
+        myImageView.setImageResource(R.drawable.casa)
+
+        // Configuración del cuadro parpadeante
+        cuadroParpadeante = findViewById(R.id.cuadroParpadeante)
+        handler = Handler(Looper.getMainLooper())
+
+        // Configura el runnable para alternar el color del cuadro
+        runnable = object : Runnable {
+            override fun run() {
+                val color = if (cuadroParpadeante.tag == "white") Color.BLACK else Color.WHITE
+                cuadroParpadeante.setBackgroundColor(color)
+                cuadroParpadeante.tag = if (color == Color.WHITE) "white" else "black"
+                handler.postDelayed(this, 500) // Cambia cada 500 ms
+            }
+        }
+
+        // Inicia o detiene el parpadeo al presionar el botón Luces
+        btnLuces.setOnClickListener {
+            if (isFlashing) {
+                handler.removeCallbacks(runnable) // Detiene el parpadeo
+            } else {
+                handler.post(runnable) // Inicia el parpadeo
+            }
+            isFlashing = !isFlashing // Alterna el estado de parpadeo
+        }
+
+        // Botón retroceder a MainActivity3
+        retrocederButton.setOnClickListener {
+            val intent = Intent(this, MainActivity3::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        // Observador del socket
         socketViewModel.serverResponse.observe(this, Observer { response ->
             handleServerResponse(response)
         })
+
+        // Configuración de los botones de luces
         btnBano2.setOnClickListener {
             socketViewModel.sendMessage("leds,LED1")
-            //setupColorToggle(btnBano2)
             Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
         }
         btnCuarto1.setOnClickListener {
-            //setupColorToggle(btnCuarto1)
             socketViewModel.sendMessage("leds,LED2")
             Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
         }
         btnSala.setOnClickListener {
-            //setupColorToggle(btnSala)
             socketViewModel.sendMessage("leds,LED3")
-            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()  }
+            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
+        }
         btnCuarto2.setOnClickListener {
-            //setupColorToggle(btnCuarto2)
             socketViewModel.sendMessage("leds,LED4")
             Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
         }
 
-        // Referencia al ImageView
-        val myImageView = findViewById<ImageView>(R.id.myImageView)
+        // Configuración del BiometricPrompt para autenticación biométrica
+        val executor = ContextCompat.getMainExecutor(this)
+        val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                Toast.makeText(applicationContext, "Éxito", Toast.LENGTH_SHORT).show()
+            }
 
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                Toast.makeText(applicationContext, "Error de autenticación: $errString", Toast.LENGTH_SHORT).show()
+            }
 
-// Establecer la imagen programáticamente
-        myImageView.setImageResource(R.drawable.casa)
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                Toast.makeText(applicationContext, "Autenticación fallida", Toast.LENGTH_SHORT).show()
+            }
+        })
 
+        // Configura el diálogo de autenticación
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Autenticación Biométrica")
+            .setSubtitle("Usa tu huella para autenticarse")
+            .setNegativeButtonText("Cancelar")
+            .build()
+
+        // Inicia la autenticación biométrica al presionar el botón
+        btnAutenticacion.setOnClickListener {
+            biometricPrompt.authenticate(promptInfo)
+        }
     }
+
 
     private fun setupWindowInsets() {
         val mainView = findViewById<View>(R.id.main)
@@ -78,11 +152,6 @@ class ledsActivity : BaseActivity() {
     }
 
     private fun setupButtons() {
-        val btnBano2= findViewById<Button>(R.id.btnBano2)
-        val btnCuarto1 = findViewById<Button>(R.id.btnCuarto1)
-        val btnSala = findViewById<Button>(R.id.btnSala)
-        val btnCuarto2 = findViewById<Button>(R.id.btnCuarto2)
-
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -101,28 +170,6 @@ class ledsActivity : BaseActivity() {
                 else -> false
             }
         }
-        // Configurando el comportamiento de cada botón
-
-
-
-    }
-
-    private fun setupColorToggle(button: Button) {
-        var isGray = true
-        button.setOnClickListener {
-            val newBackground = if (isGray) {
-                R.drawable.yellow_button_background
-            } else {
-                R.drawable.gray_button_background
-            }
-            button.setBackgroundResource(newBackground)
-            isGray = !isGray
-        }
-    }
-
-    private fun sendMessageToServer(command: String) {
-        socketViewModel.sendMessage(command)
-        Toast.makeText(this, "Comando enviado: $command", Toast.LENGTH_SHORT).show()
     }
 
     private fun handleServerResponse(response: String?) {
@@ -131,8 +178,10 @@ class ledsActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacks(runnable) // Asegura detener el runnable al destruir la actividad
     }
 }
+
 
 
 
