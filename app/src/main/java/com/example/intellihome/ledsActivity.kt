@@ -18,6 +18,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import android.content.Context
+
+import android.os.VibrationEffect
+import android.os.Vibrator
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 //2
 class ledsActivity : BaseActivity() {
@@ -43,6 +52,7 @@ class ledsActivity : BaseActivity() {
         val retrocederButton = findViewById<Button>(R.id.retrocederhome)
         val myImageView = findViewById<ImageView>(R.id.myImageView)
         val btnAutenticacion = findViewById<Button>(R.id.btnAutenticacion) // Nuevo botón de autenticación
+        var vibrationCounter = 0 // Declaración de vibrationCounter
 
         // Configura conexión de socket
         socketViewModel.connectToServer("172.18.116.167", 6060)
@@ -55,13 +65,31 @@ class ledsActivity : BaseActivity() {
         cuadroParpadeante = findViewById(R.id.cuadroParpadeante)
         handler = Handler(Looper.getMainLooper())
 
-        // Configura el runnable para alternar el color del cuadro
+        // Obtén el servicio de vibración
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+        // Configura el runnable para alternar el fondo del cuadro y vibrar
         runnable = object : Runnable {
             override fun run() {
-                val color = if (cuadroParpadeante.tag == "white") Color.BLACK else Color.WHITE
-                cuadroParpadeante.setBackgroundColor(color)
-                cuadroParpadeante.tag = if (color == Color.WHITE) "white" else "black"
-                handler.postDelayed(this, 500) // Cambia cada 500 ms
+                // Alterna entre fondo blanco y fondo rojo
+                val fondo = if (cuadroParpadeante.tag == "fondo_blanco") R.drawable.fondo_con_fuego_rojo else R.drawable.fondo_con_fuego
+                cuadroParpadeante.setBackgroundResource(fondo)
+                cuadroParpadeante.tag = if (fondo == R.drawable.fondo_con_fuego) "fondo_blanco" else "fondo_rojo"
+
+                // Activa la vibración cada 4 cambios de fondo para reducir la carga
+                if (vibrationCounter % 4 == 0 && vibrator.hasVibrator()) { // Vibrar cada 4 cambios de fondo
+                    CoroutineScope(Dispatchers.Default).launch {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+                        } else {
+                            @Suppress("DEPRECATION")
+                            vibrator.vibrate(50) // Duración de 100 ms
+                        }
+                    }
+                }
+                vibrationCounter++
+
+                handler.postDelayed(this, 50) // Cambia cada 500 ms
             }
         }
 
@@ -69,6 +97,8 @@ class ledsActivity : BaseActivity() {
         btnLuces.setOnClickListener {
             if (isFlashing) {
                 handler.removeCallbacks(runnable) // Detiene el parpadeo
+                cuadroParpadeante.setBackgroundResource(R.drawable.fondo_con_fuego) // Asegura que vuelva a fondo blanco
+                cuadroParpadeante.tag = "fondo_blanco"
             } else {
                 handler.post(runnable) // Inicia el parpadeo
             }

@@ -15,11 +15,16 @@
         <!-- Botón para abrir el menú hamburguesa -->
         <Button
             android:id="@+id/buttonAbrirMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/amburguesa"
+            android:layout_width="59dp"
+            android:layout_height="50dp"
             android:layout_alignParentTop="true"
-            android:layout_margin="11dp" />
+            android:layout_marginStart="11dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginEnd="11dp"
+            android:layout_marginRight="11dp"
+            android:layout_marginBottom="11dp"
+            android:background="@drawable/amburguesa" />
 
         <!-- Contenedor de botones dinámicos -->
         <LinearLayout
@@ -33,12 +38,12 @@
         <!-- Botón para refrescar datos desde el servidor -->
         <Button
             android:id="@+id/button_refresh"
-            android:layout_width="wrap_content"
+            android:layout_width="57dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/actualizar2"
-            android:layout_marginTop="16dp"
             android:layout_centerHorizontal="true"
-            android:gravity="left"/>
+            android:layout_marginTop="16dp"
+            android:background="@drawable/actualizar2"
+            android:gravity="left" />
 
         <!-- Barra de navegación inferior -->
         <com.google.android.material.bottomnavigation.BottomNavigationView

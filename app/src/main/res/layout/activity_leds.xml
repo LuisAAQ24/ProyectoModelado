@@ -73,12 +73,19 @@
 
     <View
         android:id="@+id/cuadroParpadeante"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_x="200dp"
-        android:layout_y="400dp"
-        android:background="#FFFFFF" />
+        android:layout_width="33dp"
+        android:layout_height="39dp"
+        android:layout_x="201dp"
+        android:layout_y="118dp"
+        android:background="@drawable/fondo_con_fuego" />
 
+    <View
+        android:id="@+id/cuadroParpadeante2"
+        android:layout_width="33dp"
+        android:layout_height="39dp"
+        android:layout_x="297dp"
+        android:layout_y="118dp"
+        android:background="@drawable/fondo_con_fuego" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/LivingRoom"
@@ -111,6 +118,17 @@
         android:text=""
         android:textColor="#000000"
         android:textSize="10sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnCocina"
+        android:layout_width="99dp"
+        android:layout_height="107dp"
+        android:layout_x="197dp"
+        android:layout_y="112dp"
+        android:background="@drawable/gray_button_background"
+        android:text=""
+        android:textColor="#000000"
+        android:textSize="18sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCocina"
@@ -191,7 +209,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_x="5dp"
-        android:layout_y="720dp"
+        android:layout_y="810dp"
         android:background="#063970"
         app:menu="@menu/bottom_navigation_menu" />
 
