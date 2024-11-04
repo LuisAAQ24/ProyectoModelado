@@ -31,11 +31,11 @@
         android:id="@+id/tvDescripcion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="40dp"
-        android:layout_y="356dp"
+        android:layout_x="35dp"
+        android:layout_y="330dp"
         android:text="Toca en un cuarto para prender y apagar luz"
         android:textColor="#FF000000"
-        android:textSize="14sp" />
+        android:textSize="17sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSala"
@@ -64,7 +64,7 @@
         android:layout_width="100dp"
         android:layout_height="30dp"
         android:layout_x="42dp"
-        android:layout_y="447dp"
+        android:layout_y="600dp"
         android:background="@drawable/gray_button_background"
         android:text="Luces "
         android:textColor="#000000"
@@ -85,7 +85,46 @@
         android:layout_height="39dp"
         android:layout_x="297dp"
         android:layout_y="118dp"
-        android:background="@drawable/fondo_con_fuego" />
+        android:background="@drawable/fondo_terremoto" />
+
+
+    <View
+        android:id="@+id/cuadroinfo"
+        android:layout_width="33dp"
+        android:layout_height="39dp"
+        android:layout_x="38dp"
+        android:layout_y="450dp"
+        android:background="@drawable/fondo_con_fuego_rojo" />
+
+    <TextView
+        android:id="@+id/tvDescripcion2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="80dp"
+        android:layout_y="462dp"
+        android:text="Indica que hay un incendio"
+        android:textColor="#FF000000"
+        android:textSize="18sp" />
+
+
+    <TextView
+        android:id="@+id/tvDescripcion3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="80dp"
+        android:layout_y="408dp"
+        android:text="Indica que hay un Sismo"
+        android:textColor="#FF000000"
+        android:textSize="18sp" />
+
+
+    <View
+        android:id="@+id/cuadoinfo2"
+        android:layout_width="33dp"
+        android:layout_height="39dp"
+        android:layout_x="38dp"
+        android:layout_y="400dp"
+        android:background="@drawable/fondo_terremoto_cafe" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/LivingRoom"
@@ -130,16 +169,6 @@
         android:textColor="#000000"
         android:textSize="18sp" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnCocina"
-        android:layout_width="99dp"
-        android:layout_height="107dp"
-        android:layout_x="197dp"
-        android:layout_y="112dp"
-        android:background="@drawable/gray_button_background"
-        android:text=""
-        android:textColor="#000000"
-        android:textSize="18sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnCuarto1"
@@ -194,8 +223,8 @@
         android:id="@+id/retrocederhome"
         android:layout_width="43dp"
         android:layout_height="33dp"
-        android:layout_x="35dp"
-        android:layout_y="14dp"
+        android:layout_x="5dp"
+        android:layout_y="10dp"
         android:backgroundTint="#FFFFFF"
         android:drawableLeft="@drawable/baseline_arrow_left_24"
         android:padding="12dp"
@@ -217,10 +246,21 @@
         android:id="@+id/btnAutenticacion"
         android:layout_width="100dp"
         android:layout_height="30dp"
-        android:layout_x="42dp"
-        android:layout_y="490dp"
+        android:layout_x="200dp"
+        android:layout_y="559dp"
         android:background="@drawable/gray_button_background"
         android:text="Autenticar"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnSismo"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_x="42dp"
+        android:layout_y="530dp"
+        android:background="@drawable/gray_button_background"
+        android:text="Sismo"
         android:textColor="#000000"
         android:textSize="16sp" />
 
