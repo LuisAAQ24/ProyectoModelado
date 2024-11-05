@@ -19,31 +19,38 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import android.content.Context
-
 import android.os.VibrationEffect
 import android.os.Vibrator
-
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
-//2
+// Activity for controlling LED lights and handling biometric authentication
 class ledsActivity : BaseActivity() {
     private lateinit var socketViewModel: SocketViewModel
-    private lateinit var cuadroParpadeante: View
-    private lateinit var handler: Handler
-    private var isFlashing = false
-    private lateinit var runnable: Runnable
+    private lateinit var cuadroParpadeanteFuego: View
+    private lateinit var cuadroParpadeanteTerremoto: View
+    private lateinit var handlerFuego: Handler
+    private lateinit var handlerTerremoto: Handler
+    private lateinit var runnableFuego: Runnable
+    private lateinit var runnableTerremoto: Runnable
+    private var isFlashingFuego = false
+    private var isFlashingTerremoto = false
+    private var vibrationCounterFuego = 0
+    private var vibrationCounterTerremoto = 0
+    private lateinit var vibratorFuego: Vibrator  // Vibrator for fire alerts
+    private lateinit var vibratorTerremoto: Vibrator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Enables edge-to-edge display
         setContentView(R.layout.activity_leds)
 
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
         setupWindowInsets()
 
-        // Botones
+        // Button initialization
         val btnBano2 = findViewById<Button>(R.id.btnBano2)
         val btnCuarto1 = findViewById<Button>(R.id.btnCuarto1)
         val btnSala = findViewById<Button>(R.id.btnSala)
@@ -51,161 +58,182 @@ class ledsActivity : BaseActivity() {
         val btnLuces = findViewById<Button>(R.id.btnluces)
         val retrocederButton = findViewById<Button>(R.id.retrocederhome)
         val myImageView = findViewById<ImageView>(R.id.myImageView)
-        val btnAutenticacion = findViewById<Button>(R.id.btnAutenticacion) // Nuevo botón de autenticación
-        val btnSismo = findViewById<Button>(R.id.btnSismo) // Nuevo botón de autenticación
-        var vibrationCounter = 0 // Declaración de vibrationCounter
+        val btnAutenticacion = findViewById<Button>(R.id.btnAutenticacion) // Authentication button
+        val btnSismo = findViewById<Button>(R.id.btnSismo) // Earthquake button
 
-        // Configura conexión de socket
-        socketViewModel.connectToServer("172.18.116.167", 6060)
-        setupButtons()
+        // Connect to socket server
+        socketViewModel.connectToServer("172.18.171.241", 6060)
 
-        // Imagen programática
+        // Set an image programmatically
         myImageView.setImageResource(R.drawable.casa)
+        vibratorFuego = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vibratorTerremoto = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        cuadroParpadeanteFuego = findViewById(R.id.cuadroParpadeante)
+        cuadroParpadeanteTerremoto = findViewById(R.id.cuadroParpadeante2)
+        // Initialize handlers for flashing effects
+        handlerFuego = Handler(Looper.getMainLooper())
+        handlerTerremoto = Handler(Looper.getMainLooper())
 
+        // Define flashing behaviors
+        setupFlashingRunnables()
 
-        // Configuración del cuadro parpadeante para el botón de terremoto
-        val cuadroParpadeanteTerremoto = findViewById<View>(R.id.cuadroParpadeante2)
-        val handlerTerremoto = Handler(Looper.getMainLooper())
-        val vibratorTerremoto = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        var vibrationCounterTerremoto = 0
-        var isFlashingTerremoto = false
+        // Button click listeners
+        btnSismo.setOnClickListener { toggleFlashingTerremoto() }
+        btnLuces.setOnClickListener { toggleFlashingFuego() }
 
-        val runnableTerremoto = object : Runnable {
-            override fun run() {
-                val fondo = if (cuadroParpadeanteTerremoto.tag == "fondo_terremoto") R.drawable.fondo_terremoto_cafe else R.drawable.fondo_terremoto
-                cuadroParpadeanteTerremoto.setBackgroundResource(fondo)
-                cuadroParpadeanteTerremoto.tag = if (fondo == R.drawable.fondo_terremoto) "fondo_terremoto" else "fondo_terremoto_cafe"
-
-                if (vibrationCounterTerremoto % 4 == 0 && vibratorTerremoto.hasVibrator()) {
-                    CoroutineScope(Dispatchers.Default).launch {
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                            vibratorTerremoto.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
-                        } else {
-                            @Suppress("DEPRECATION")
-                            vibratorTerremoto.vibrate(50)
-                        }
-                    }
-                }
-                vibrationCounterTerremoto++
-                handlerTerremoto.postDelayed(this, 100)
-            }
-        }
-
-        btnSismo.setOnClickListener {
-            if (isFlashingTerremoto) {
-                handlerTerremoto.removeCallbacks(runnableTerremoto)
-                cuadroParpadeanteTerremoto.setBackgroundResource(R.drawable.fondo_terremoto)
-                cuadroParpadeanteTerremoto.tag = "fondo_terremoto"
-            } else {
-                handlerTerremoto.post(runnableTerremoto)
-            }
-            isFlashingTerremoto = !isFlashingTerremoto
-        }
-
-// Configuración del cuadro parpadeante para el botón de fuego
-        val cuadroParpadeanteFuego = findViewById<View>(R.id.cuadroParpadeante)
-        val handlerFuego = Handler(Looper.getMainLooper())
-        val vibratorFuego = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        var vibrationCounterFuego = 0
-        var isFlashingFuego = false
-
-        val runnableFuego = object : Runnable {
-            override fun run() {
-                val fondo = if (cuadroParpadeanteFuego.tag == "fondo_blanco") R.drawable.fondo_con_fuego_rojo else R.drawable.fondo_con_fuego
-                cuadroParpadeanteFuego.setBackgroundResource(fondo)
-                cuadroParpadeanteFuego.tag = if (fondo == R.drawable.fondo_con_fuego) "fondo_blanco" else "fondo_rojo"
-
-                if (vibrationCounterFuego % 4 == 0 && vibratorFuego.hasVibrator()) {
-                    CoroutineScope(Dispatchers.Default).launch {
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                            vibratorFuego.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
-                        } else {
-                            @Suppress("DEPRECATION")
-                            vibratorFuego.vibrate(50)
-                        }
-                    }
-                }
-                vibrationCounterFuego++
-                handlerFuego.postDelayed(this, 100)
-            }
-        }
-
-        btnLuces.setOnClickListener {
-            if (isFlashingFuego) {
-                handlerFuego.removeCallbacks(runnableFuego)
-                cuadroParpadeanteFuego.setBackgroundResource(R.drawable.fondo_con_fuego)
-                cuadroParpadeanteFuego.tag = "fondo_blanco"
-            } else {
-                handlerFuego.post(runnableFuego)
-            }
-            isFlashingFuego = !isFlashingFuego
-        }
-
-
-
-
-        // Botón retroceder a MainActivity3
+        // Back button to MainActivity3
         retrocederButton.setOnClickListener {
-            val intent = Intent(this, MainActivity3::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, MainActivity3::class.java))
             finish()
         }
 
-        // Observador del socket
-        socketViewModel.serverResponse.observe(this, Observer { response ->
-            handleServerResponse(response)
-        })
+        // Observe socket responses
+        socketViewModel.serverResponse.observe(this, Observer { response -> handleServerResponse(response) })
 
-        // Configuración de los botones de luces
-        btnBano2.setOnClickListener {
-            socketViewModel.sendMessage("leds,LED1")
-            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
-        }
-        btnCuarto1.setOnClickListener {
-            socketViewModel.sendMessage("leds,LED2")
-            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
-        }
-        btnSala.setOnClickListener {
-            socketViewModel.sendMessage("leds,LED3")
-            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
-        }
-        btnCuarto2.setOnClickListener {
-            socketViewModel.sendMessage("leds,LED4")
-            Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
-        }
+        // LED control buttons
+        setupLedControlButtons(btnBano2, btnCuarto1, btnSala, btnCuarto2)
 
-        // Configuración del BiometricPrompt para autenticación biométrica
+        // Setup biometric authentication
+        setupBiometricAuthentication(btnAutenticacion)
+    }
+
+    // Setup flashing runnables for fire and earthquake effects
+    private fun setupFlashingRunnables() {
+        runnableFuego = createFlashingRunnable(cuadroParpadeanteFuego, R.drawable.fondo_con_fuego_rojo, R.drawable.fondo_con_fuego)
+        runnableTerremoto = createFlashingRunnable(cuadroParpadeanteTerremoto, R.drawable.fondo_terremoto_cafe, R.drawable.fondo_terremoto)
+    }
+
+    // Create a flashing runnable for a specific view and backgrounds
+    private fun createFlashingRunnable(view: View, background1: Int, background2: Int): Runnable {
+        return object : Runnable {
+            override fun run() {
+                val currentBackground = if (view.tag == "fondo_blanco") background2 else background1
+                view.setBackgroundResource(currentBackground)
+                view.tag = if (currentBackground == background1) "fondo_blanco" else "fondo_rojo"
+
+                // Handle vibration
+                if (vibrationCounterFuego % 4 == 0 && vibratorFuego.hasVibrator()) {
+                    vibrateDevice(VibrationEffect.DEFAULT_AMPLITUDE)
+                }
+                vibrationCounterFuego++
+                handlerFuego.postDelayed(this, 100)
+
+            }
+        }
+    }
+
+    // Toggle flashing for fire
+    private fun toggleFlashingFuego() {
+        if (isFlashingFuego) {
+            handlerFuego.removeCallbacks(runnableFuego)
+            cuadroParpadeanteFuego.setBackgroundResource(R.drawable.fondo_con_fuego)
+            cuadroParpadeanteFuego.tag = "fondo_blanco"
+        } else {
+            handlerFuego.post(runnableFuego)
+        }
+        isFlashingFuego = !isFlashingFuego
+    }
+
+    // Toggle flashing for earthquake
+    private fun toggleFlashingTerremoto() {
+        if (isFlashingTerremoto) {
+            handlerTerremoto.removeCallbacks(runnableTerremoto)
+            cuadroParpadeanteTerremoto.setBackgroundResource(R.drawable.fondo_terremoto)
+            cuadroParpadeanteTerremoto.tag = "fondo_terremoto"
+        } else {
+            handlerTerremoto.post(runnableTerremoto)
+        }
+        isFlashingTerremoto = !isFlashingTerremoto
+    }
+
+    // Setup LED control buttons
+    private fun setupLedControlButtons(vararg buttons: Button) {
+        buttons.forEachIndexed { index, button ->
+            button.setOnClickListener {
+                socketViewModel.sendMessage("leds,LED${index + 1}")
+                Toast.makeText(this, "Comando enviado", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // Setup biometric authentication
+    private fun setupBiometricAuthentication(button: Button) {
         val executor = ContextCompat.getMainExecutor(this)
         val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
+                socketViewModel.sendMessage("leds,puerta")
                 Toast.makeText(applicationContext, "Éxito", Toast.LENGTH_SHORT).show()
             }
 
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                super.onAuthenticationError(errorCode, errString)
                 Toast.makeText(applicationContext, "Error de autenticación: $errString", Toast.LENGTH_SHORT).show()
             }
 
             override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
                 Toast.makeText(applicationContext, "Autenticación fallida", Toast.LENGTH_SHORT).show()
             }
         })
 
-        // Configura el diálogo de autenticación
+        // Configure the authentication dialog
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle("Autenticación Biométrica")
             .setSubtitle("Usa tu huella para autenticarse")
             .setNegativeButtonText("Cancelar")
             .build()
 
-        // Inicia la autenticación biométrica al presionar el botón
-        btnAutenticacion.setOnClickListener {
+        // Start biometric authentication on button click
+        button.setOnClickListener {
             biometricPrompt.authenticate(promptInfo)
         }
     }
 
+    // Handle server response for alerts
+// Handle server response for alerts
+    private fun handleServerResponse(response: String?) {
+        Log.d("ServerResponse", "Mensaje recibido: $response")
+        when (response) {
+
+            "fuego" -> {
+                toggleFlashingFuego()
+                Toast.makeText(this, "Fuego detectado", Toast.LENGTH_SHORT).show()
+            }
+            "sismo" -> {
+                toggleFlashingTerremoto()
+                Toast.makeText(this, "Sismo detectado", Toast.LENGTH_SHORT).show()
+            }
+            "nosismo" -> {
+                toggleFlashingTerremoto() // Esto detendrá el parpadeo
+                cuadroParpadeanteTerremoto.setBackgroundResource(R.drawable.fondo_terremoto) // Restablecer imagen
+                Toast.makeText(this, "Sismo finalizado", Toast.LENGTH_SHORT).show()
+
+            }
+            "nofuego" -> {
+                toggleFlashingFuego() // Esto detendrá el parpadeo
+                cuadroParpadeanteFuego.setBackgroundResource(R.drawable.fondo_con_fuego) // Restablecer imagen
+                Toast.makeText(this, "Fuego extinguido", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+
+
+    // Vibrate device with specified amplitude
+    private fun vibrateDevice(amplitude: Int) {
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(100, amplitude))
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(50)
+        }
+    }
+
+    // Clean up resources
+    override fun onDestroy() {
+        super.onDestroy()
+        handlerFuego.removeCallbacks(runnableFuego) // Stop the fire flashing runnable
+        handlerTerremoto.removeCallbacks(runnableTerremoto) // Stop the earthquake flashing runnable
+    }
 
     private fun setupWindowInsets() {
         val mainView = findViewById<View>(R.id.main)
@@ -213,44 +241,11 @@ class ledsActivity : BaseActivity() {
             ViewCompat.setOnApplyWindowInsetsListener(it) { v, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
                 v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-                insets
-            }
-        } ?: run {
-            Toast.makeText(this, "Error: No se encontró la vista principal", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun setupButtons() {
-        val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.navigation_home -> {
-                    startActivity(Intent(this, MainActivity3::class.java))
-                    true
-                }
-                R.id.navigation_mapa -> {
-                    startActivity(Intent(this, MapActivity::class.java))
-                    true
-                }
-                R.id.navigation_otros -> {
-                    startActivity(Intent(this, MainActivity2::class.java))
-                    true
-                }
-                else -> false
+                WindowInsetsCompat.CONSUMED // Prevent further propagation of the insets
             }
         }
-    }
-
-    private fun handleServerResponse(response: String?) {
-        println("Response: $response")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        handler.removeCallbacks(runnable) // Asegura detener el runnable al destruir la actividad
     }
 }
-
 
 
 
