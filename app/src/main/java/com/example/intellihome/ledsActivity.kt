@@ -18,6 +18,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import android.content.Context
+
+import android.os.VibrationEffect
+import android.os.Vibrator
+
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 //2
 class ledsActivity : BaseActivity() {
@@ -43,6 +52,8 @@ class ledsActivity : BaseActivity() {
         val retrocederButton = findViewById<Button>(R.id.retrocederhome)
         val myImageView = findViewById<ImageView>(R.id.myImageView)
         val btnAutenticacion = findViewById<Button>(R.id.btnAutenticacion) // Nuevo botón de autenticación
+        val btnSismo = findViewById<Button>(R.id.btnSismo) // Nuevo botón de autenticación
+        var vibrationCounter = 0 // Declaración de vibrationCounter
 
         // Configura conexión de socket
         socketViewModel.connectToServer("172.18.116.167", 6060)
@@ -51,29 +62,87 @@ class ledsActivity : BaseActivity() {
         // Imagen programática
         myImageView.setImageResource(R.drawable.casa)
 
-        // Configuración del cuadro parpadeante
-        cuadroParpadeante = findViewById(R.id.cuadroParpadeante)
-        handler = Handler(Looper.getMainLooper())
 
-        // Configura el runnable para alternar el color del cuadro
-        runnable = object : Runnable {
+        // Configuración del cuadro parpadeante para el botón de terremoto
+        val cuadroParpadeanteTerremoto = findViewById<View>(R.id.cuadroParpadeante2)
+        val handlerTerremoto = Handler(Looper.getMainLooper())
+        val vibratorTerremoto = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        var vibrationCounterTerremoto = 0
+        var isFlashingTerremoto = false
+
+        val runnableTerremoto = object : Runnable {
             override fun run() {
-                val color = if (cuadroParpadeante.tag == "white") Color.BLACK else Color.WHITE
-                cuadroParpadeante.setBackgroundColor(color)
-                cuadroParpadeante.tag = if (color == Color.WHITE) "white" else "black"
-                handler.postDelayed(this, 500) // Cambia cada 500 ms
+                val fondo = if (cuadroParpadeanteTerremoto.tag == "fondo_terremoto") R.drawable.fondo_terremoto_cafe else R.drawable.fondo_terremoto
+                cuadroParpadeanteTerremoto.setBackgroundResource(fondo)
+                cuadroParpadeanteTerremoto.tag = if (fondo == R.drawable.fondo_terremoto) "fondo_terremoto" else "fondo_terremoto_cafe"
+
+                if (vibrationCounterTerremoto % 4 == 0 && vibratorTerremoto.hasVibrator()) {
+                    CoroutineScope(Dispatchers.Default).launch {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            vibratorTerremoto.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+                        } else {
+                            @Suppress("DEPRECATION")
+                            vibratorTerremoto.vibrate(50)
+                        }
+                    }
+                }
+                vibrationCounterTerremoto++
+                handlerTerremoto.postDelayed(this, 100)
             }
         }
 
-        // Inicia o detiene el parpadeo al presionar el botón Luces
-        btnLuces.setOnClickListener {
-            if (isFlashing) {
-                handler.removeCallbacks(runnable) // Detiene el parpadeo
+        btnSismo.setOnClickListener {
+            if (isFlashingTerremoto) {
+                handlerTerremoto.removeCallbacks(runnableTerremoto)
+                cuadroParpadeanteTerremoto.setBackgroundResource(R.drawable.fondo_terremoto)
+                cuadroParpadeanteTerremoto.tag = "fondo_terremoto"
             } else {
-                handler.post(runnable) // Inicia el parpadeo
+                handlerTerremoto.post(runnableTerremoto)
             }
-            isFlashing = !isFlashing // Alterna el estado de parpadeo
+            isFlashingTerremoto = !isFlashingTerremoto
         }
+
+// Configuración del cuadro parpadeante para el botón de fuego
+        val cuadroParpadeanteFuego = findViewById<View>(R.id.cuadroParpadeante)
+        val handlerFuego = Handler(Looper.getMainLooper())
+        val vibratorFuego = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        var vibrationCounterFuego = 0
+        var isFlashingFuego = false
+
+        val runnableFuego = object : Runnable {
+            override fun run() {
+                val fondo = if (cuadroParpadeanteFuego.tag == "fondo_blanco") R.drawable.fondo_con_fuego_rojo else R.drawable.fondo_con_fuego
+                cuadroParpadeanteFuego.setBackgroundResource(fondo)
+                cuadroParpadeanteFuego.tag = if (fondo == R.drawable.fondo_con_fuego) "fondo_blanco" else "fondo_rojo"
+
+                if (vibrationCounterFuego % 4 == 0 && vibratorFuego.hasVibrator()) {
+                    CoroutineScope(Dispatchers.Default).launch {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            vibratorFuego.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+                        } else {
+                            @Suppress("DEPRECATION")
+                            vibratorFuego.vibrate(50)
+                        }
+                    }
+                }
+                vibrationCounterFuego++
+                handlerFuego.postDelayed(this, 100)
+            }
+        }
+
+        btnLuces.setOnClickListener {
+            if (isFlashingFuego) {
+                handlerFuego.removeCallbacks(runnableFuego)
+                cuadroParpadeanteFuego.setBackgroundResource(R.drawable.fondo_con_fuego)
+                cuadroParpadeanteFuego.tag = "fondo_blanco"
+            } else {
+                handlerFuego.post(runnableFuego)
+            }
+            isFlashingFuego = !isFlashingFuego
+        }
+
+
+
 
         // Botón retroceder a MainActivity3
         retrocederButton.setOnClickListener {
