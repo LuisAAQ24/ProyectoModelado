@@ -42,6 +42,7 @@ class ledsActivity : BaseActivity() {
     private lateinit var vibratorFuego: Vibrator  // Vibrator for fire alerts
     private lateinit var vibratorTerremoto: Vibrator
     private lateinit var btnAutenticacion: Button
+    private var isGarageOpen = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +64,8 @@ class ledsActivity : BaseActivity() {
         val btnSismo = findViewById<Button>(R.id.btnSismo) // Earthquake button
 
         btnAutenticacion = findViewById(R.id.btnAutenticacion)
+
+
 
 
         // Connect to socket server
@@ -172,9 +175,22 @@ class ledsActivity : BaseActivity() {
         val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
-                // Cambia la imagen de fondo del botón después de autenticación exitosa
-                btnAutenticacion.background = ContextCompat.getDrawable(this@ledsActivity, R.drawable.cochera_abrir)
-                Toast.makeText(this@ledsActivity, "Cochera abierta", Toast.LENGTH_SHORT).show()
+
+                // Cambio 3: Alterna el estado de la cochera
+                isGarageOpen = !isGarageOpen
+
+                // Cambio 4: Actualización de imagen según el estado de la cochera
+                val drawableId = if (isGarageOpen) {
+                    R.drawable.cochera_abrir
+                } else {
+                    R.drawable.cochera_cerrar
+                }
+
+                btnAutenticacion.background = ContextCompat.getDrawable(this@ledsActivity, drawableId)
+
+                // Cambio 5: Mensaje de confirmación según el estado de la cochera
+                val message = if (isGarageOpen) "Cochera abierta" else "Cochera cerrada"
+                Toast.makeText(this@ledsActivity, message, Toast.LENGTH_SHORT).show()
             }
 
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
@@ -196,6 +212,7 @@ class ledsActivity : BaseActivity() {
 
         biometricPrompt.authenticate(promptInfo)
     }
+
 
     // Handle server response for alerts
 // Handle server response for alerts
