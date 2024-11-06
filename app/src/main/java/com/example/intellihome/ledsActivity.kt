@@ -22,6 +22,7 @@ import android.content.Context
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
+import android.widget.TextView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,7 +44,7 @@ class ledsActivity : BaseActivity() {
     private lateinit var vibratorTerremoto: Vibrator
     private lateinit var btnAutenticacion: Button
     private var isGarageOpen = false
-
+    private lateinit var textViewAgua: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +55,7 @@ class ledsActivity : BaseActivity() {
         setupWindowInsets()
 
         // Button initialization
+        textViewAgua = findViewById(R.id.btnagua)
         val btnBano2 = findViewById<Button>(R.id.btnBano2)
         val btnCuarto1 = findViewById<Button>(R.id.btnCuarto1)
         val btnSala = findViewById<Button>(R.id.btnSala)
@@ -69,7 +71,7 @@ class ledsActivity : BaseActivity() {
 
 
         // Connect to socket server
-        socketViewModel.connectToServer("172.18.171.241", 6060)
+        socketViewModel.connectToServer("172.18.65.141", 6060)
 
         // Set an image programmatically
         myImageView.setImageResource(R.drawable.casa)
@@ -190,6 +192,7 @@ class ledsActivity : BaseActivity() {
 
                 // Cambio 5: Mensaje de confirmación según el estado de la cochera
                 val message = if (isGarageOpen) "Cochera abierta" else "Cochera cerrada"
+                socketViewModel.sendMessage("leds,puerta")
                 Toast.makeText(this@ledsActivity, message, Toast.LENGTH_SHORT).show()
             }
 
@@ -239,7 +242,14 @@ class ledsActivity : BaseActivity() {
                 cuadroParpadeanteFuego.setBackgroundResource(R.drawable.fondo_con_fuego) // Restablecer imagen
                 Toast.makeText(this, "Fuego extinguido", Toast.LENGTH_SHORT).show()
             }
+            else -> {
+                // Si el mensaje no es uno de los casos anteriores, actualizar el TextView
+                if (response != "tipo de mensaje no válido") {
+                    // Verifica si el mensaje comienza con un número
+                    textViewAgua.text = response // Cambia el texto del TextView al mensaje recibido
 
+                }
+            }
         }
     }
 
