@@ -150,17 +150,16 @@
 
 
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/btnagua"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_x="50dp"
-        android:layout_y="117dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="38dp"
+        android:layout_y="360dp"
         android:background="@drawable/fondo_agua"
-        android:text=" "
+        android:text="Humedad no registrada"
         android:textColor="#000000"
         android:textSize="12sp" />
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Pasillo"
         android:layout_width="39dp"
