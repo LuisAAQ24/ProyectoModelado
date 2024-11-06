@@ -1,0 +1,11 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo blanco -->
+    <item android:drawable="@color/celeste" />
+
+    <!-- Ícono de fuego con escala ajustada -->
+    <item
+        android:drawable="@drawable/agua"
+        android:width="24dp"
+        android:height="24dp"
+        android:gravity="center" />
+</layer-list>
