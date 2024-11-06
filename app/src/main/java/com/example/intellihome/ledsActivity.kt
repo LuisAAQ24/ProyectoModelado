@@ -19,6 +19,7 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
@@ -45,6 +46,8 @@ class ledsActivity : BaseActivity() {
     private lateinit var btnAutenticacion: Button
     private var isGarageOpen = false
     private lateinit var textViewAgua: TextView
+    private lateinit var sharedPreferences: SharedPreferences // Declara SharedPreferences
+    private val storedPassword = sharedPreferences.getString("password", null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +56,7 @@ class ledsActivity : BaseActivity() {
 
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
         setupWindowInsets()
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
         // Button initialization
         textViewAgua = findViewById(R.id.btnagua)
@@ -226,10 +230,13 @@ class ledsActivity : BaseActivity() {
             "fuego" -> {
                 toggleFlashingFuego()
                 Toast.makeText(this, "Fuego detectado", Toast.LENGTH_SHORT).show()
+                socketViewModel.sendMessage("desastre,$storedPassword,fuego") // Enviar mensaje
             }
             "sismo" -> {
                 toggleFlashingTerremoto()
                 Toast.makeText(this, "Sismo detectado", Toast.LENGTH_SHORT).show()
+                socketViewModel.sendMessage("desastre,$storedPassword,sismo") // Enviar mensaje
+
             }
             "nosismo" -> {
                 toggleFlashingTerremoto() // Esto detendrá el parpadeo
