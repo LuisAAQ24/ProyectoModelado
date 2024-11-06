@@ -147,6 +147,20 @@
         android:textColor="#000000"
         android:textSize="12sp" />
 
+
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnagua"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_x="50dp"
+        android:layout_y="117dp"
+        android:background="@drawable/fondo_agua"
+        android:text=" "
+        android:textColor="#000000"
+        android:textSize="12sp" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Pasillo"
         android:layout_width="39dp"
@@ -244,12 +258,12 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAutenticacion"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_x="200dp"
-        android:layout_y="559dp"
-        android:background="@drawable/gray_button_background"
-        android:text="Autenticar"
+        android:layout_width="44dp"
+        android:layout_height="107dp"
+        android:layout_x="394dp"
+        android:layout_y="217dp"
+        android:background="@drawable/cochera_cerrar"
+        android:text=" "
         android:textColor="#000000"
         android:textSize="16sp" />
 

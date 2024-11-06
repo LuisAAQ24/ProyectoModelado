@@ -41,6 +41,9 @@ class ledsActivity : BaseActivity() {
     private var vibrationCounterTerremoto = 0
     private lateinit var vibratorFuego: Vibrator  // Vibrator for fire alerts
     private lateinit var vibratorTerremoto: Vibrator
+    private lateinit var btnAutenticacion: Button
+    private var isGarageOpen = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,8 +61,12 @@ class ledsActivity : BaseActivity() {
         val btnLuces = findViewById<Button>(R.id.btnluces)
         val retrocederButton = findViewById<Button>(R.id.retrocederhome)
         val myImageView = findViewById<ImageView>(R.id.myImageView)
-        val btnAutenticacion = findViewById<Button>(R.id.btnAutenticacion) // Authentication button
         val btnSismo = findViewById<Button>(R.id.btnSismo) // Earthquake button
+
+        btnAutenticacion = findViewById(R.id.btnAutenticacion)
+
+
+
 
         // Connect to socket server
         socketViewModel.connectToServer("172.18.171.241", 6060)
@@ -74,12 +81,18 @@ class ledsActivity : BaseActivity() {
         handlerFuego = Handler(Looper.getMainLooper())
         handlerTerremoto = Handler(Looper.getMainLooper())
 
+        btnAutenticacion.setOnClickListener {
+            showBiometricPrompt()
+        }
+
         // Define flashing behaviors
         setupFlashingRunnables()
 
         // Button click listeners
         btnSismo.setOnClickListener { toggleFlashingTerremoto() }
         btnLuces.setOnClickListener { toggleFlashingFuego() }
+
+
 
         // Back button to MainActivity3
         retrocederButton.setOnClickListener {
@@ -93,8 +106,7 @@ class ledsActivity : BaseActivity() {
         // LED control buttons
         setupLedControlButtons(btnBano2, btnCuarto1, btnSala, btnCuarto2)
 
-        // Setup biometric authentication
-        setupBiometricAuthentication(btnAutenticacion)
+
     }
 
     // Setup flashing runnables for fire and earthquake effects
@@ -156,36 +168,51 @@ class ledsActivity : BaseActivity() {
         }
     }
 
-    // Setup biometric authentication
-    private fun setupBiometricAuthentication(button: Button) {
+
+
+    private fun showBiometricPrompt() {
         val executor = ContextCompat.getMainExecutor(this)
         val biometricPrompt = BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                socketViewModel.sendMessage("leds,puerta")
-                Toast.makeText(applicationContext, "Éxito", Toast.LENGTH_SHORT).show()
+                super.onAuthenticationSucceeded(result)
+
+                // Cambio 3: Alterna el estado de la cochera
+                isGarageOpen = !isGarageOpen
+
+                // Cambio 4: Actualización de imagen según el estado de la cochera
+                val drawableId = if (isGarageOpen) {
+                    R.drawable.cochera_abrir
+                } else {
+                    R.drawable.cochera_cerrar
+                }
+
+                btnAutenticacion.background = ContextCompat.getDrawable(this@ledsActivity, drawableId)
+
+                // Cambio 5: Mensaje de confirmación según el estado de la cochera
+                val message = if (isGarageOpen) "Cochera abierta" else "Cochera cerrada"
+                Toast.makeText(this@ledsActivity, message, Toast.LENGTH_SHORT).show()
             }
 
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                Toast.makeText(applicationContext, "Error de autenticación: $errString", Toast.LENGTH_SHORT).show()
+                super.onAuthenticationError(errorCode, errString)
+                Toast.makeText(this@ledsActivity, "Error de autenticación: $errString", Toast.LENGTH_SHORT).show()
             }
 
             override fun onAuthenticationFailed() {
-                Toast.makeText(applicationContext, "Autenticación fallida", Toast.LENGTH_SHORT).show()
+                super.onAuthenticationFailed()
+                Toast.makeText(this@ledsActivity, "Autenticación fallida", Toast.LENGTH_SHORT).show()
             }
         })
 
-        // Configure the authentication dialog
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle("Autenticación Biométrica")
-            .setSubtitle("Usa tu huella para autenticarse")
+            .setSubtitle("Autentícate para abrir la cochera")
             .setNegativeButtonText("Cancelar")
             .build()
 
-        // Start biometric authentication on button click
-        button.setOnClickListener {
-            biometricPrompt.authenticate(promptInfo)
-        }
+        biometricPrompt.authenticate(promptInfo)
     }
+
 
     // Handle server response for alerts
 // Handle server response for alerts
@@ -231,9 +258,14 @@ class ledsActivity : BaseActivity() {
     // Clean up resources
     override fun onDestroy() {
         super.onDestroy()
-        handlerFuego.removeCallbacks(runnableFuego) // Stop the fire flashing runnable
-        handlerTerremoto.removeCallbacks(runnableTerremoto) // Stop the earthquake flashing runnable
+        if (::handlerFuego.isInitialized) {
+            handlerFuego.removeCallbacks(runnableFuego)
+        }
+        if (::handlerTerremoto.isInitialized) {
+            handlerTerremoto.removeCallbacks(runnableTerremoto)
+        }
     }
+
 
     private fun setupWindowInsets() {
         val mainView = findViewById<View>(R.id.main)
