@@ -19,6 +19,7 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
@@ -45,6 +46,8 @@ class ledsActivity : BaseActivity() {
     private lateinit var btnAutenticacion: Button
     private var isGarageOpen = false
     private lateinit var textViewAgua: TextView
+    private lateinit var sharedPreferences: SharedPreferences // Declara SharedPreferences
+    private var storedPassword: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +57,8 @@ class ledsActivity : BaseActivity() {
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
         setupWindowInsets()
 
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        storedPassword = sharedPreferences.getString("password", null)
         // Button initialization
         textViewAgua = findViewById(R.id.btnagua)
         val btnBano2 = findViewById<Button>(R.id.btnBano2)
@@ -226,10 +231,13 @@ class ledsActivity : BaseActivity() {
             "fuego" -> {
                 toggleFlashingFuego()
                 Toast.makeText(this, "Fuego detectado", Toast.LENGTH_SHORT).show()
+                socketViewModel.sendMessage("desastre,$storedPassword,fuego") // Enviar mensaje
             }
             "sismo" -> {
                 toggleFlashingTerremoto()
                 Toast.makeText(this, "Sismo detectado", Toast.LENGTH_SHORT).show()
+                socketViewModel.sendMessage("desastre,$storedPassword,sismo") // Enviar mensaje
+
             }
             "nosismo" -> {
                 toggleFlashingTerremoto() // Esto detendrá el parpadeo
@@ -244,7 +252,7 @@ class ledsActivity : BaseActivity() {
             }
             else -> {
                 // Si el mensaje no es uno de los casos anteriores, actualizar el TextView
-                if (response != "tipo de mensaje no válido") {
+                if (response != "tipo de mensaje no válido" && response!= "true") {
                     // Verifica si el mensaje comienza con un número
                     textViewAgua.text = response // Cambia el texto del TextView al mensaje recibido
 

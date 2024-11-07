@@ -85,7 +85,7 @@ class MainActivity2 : BaseActivity() {
         setContentView(R.layout.activity_main2)
         ThemeUtils.applyTheme(this)
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("172.18.51.181", 6060)
+        socketViewModel.connectToServer("172.18.65.141", 6060)
         socketViewModel.serverResponse.observe(this, androidx.lifecycle.Observer { response ->
             handleServerResponse(response)
         })
@@ -288,7 +288,7 @@ class MainActivity2 : BaseActivity() {
         }
 
         //mandar datos
-        val usuarioData = "registro,$contrasena,$email,$username,$telefono,$apellido,$nombre,$nombre,$formaPago,$numeroTarjeta,$IBAN,$fechaVencimiento,$cvc,$fechaNacimiento,$hobbies"
+        val usuarioData = "registro,$contrasena,$email,$username,$telefono,$apellido,$nombre,$formaPago,$numeroTarjeta,$IBAN,$fechaVencimiento,$cvc,$fechaNacimiento,$hobbies"
         socketViewModel.sendMessage(usuarioData)
 
         //startActivity(intent)
