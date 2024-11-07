@@ -4,7 +4,7 @@
 
     <!-- Ícono de fuego con escala ajustada -->
     <item
-        android:drawable="@drawable/ccerrada"
+        android:drawable="@drawable/abrir1"
         android:width="24dp"
         android:height="107dp"
         android:left="0dp"

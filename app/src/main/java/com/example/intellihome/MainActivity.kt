@@ -68,7 +68,7 @@ class MainActivity : BaseActivity() { // Cambiado a BaseActivity
         }
 
         // Iniciar conexión al servidor
-        socketViewModel.connectToServer("172.18.65.141", 6060)
+        socketViewModel.connectToServer("192.168.0.114", 6060)
 
         // ver las respuestas del servidor
         socketViewModel.serverResponse.observe(this, Observer { response ->

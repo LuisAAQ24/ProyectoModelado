@@ -39,6 +39,7 @@ class ledsActivity : BaseActivity() {
     private lateinit var runnableTerremoto: Runnable
     private var isFlashingFuego = false
     private var isFlashingTerremoto = false
+    private var isVibratingTerremoto = false
     private var vibrationCounterFuego = 0
     private var vibrationCounterTerremoto = 0
     private lateinit var vibratorFuego: Vibrator  // Vibrator for fire alerts
@@ -118,52 +119,55 @@ class ledsActivity : BaseActivity() {
 
     // Setup flashing runnables for fire and earthquake effects
     private fun setupFlashingRunnables() {
-        runnableFuego = createFlashingRunnable(cuadroParpadeanteFuego, R.drawable.fondo_con_fuego_rojo, R.drawable.fondo_con_fuego)
-        runnableTerremoto = createFlashingRunnable(cuadroParpadeanteTerremoto, R.drawable.fondo_terremoto_cafe, R.drawable.fondo_terremoto)
+        runnableFuego = createFlashingRunnable(cuadroParpadeanteFuego, R.drawable.fondo_con_fuego_rojo, R.drawable.fondo_con_fuego, vibrationCounterFuego, vibratorFuego, handlerFuego)
+        runnableTerremoto = createFlashingRunnable(cuadroParpadeanteTerremoto, R.drawable.fondo_terremoto_cafe, R.drawable.fondo_terremoto, vibrationCounterTerremoto, vibratorTerremoto, handlerTerremoto)
     }
 
-    // Create a flashing runnable for a specific view and backgrounds
-    private fun createFlashingRunnable(view: View, background1: Int, background2: Int): Runnable {
+
+    private fun createFlashingRunnable(view: View, background1: Int, background2: Int, vibrationCounter: Int, vibrator: Vibrator, handler: Handler): Runnable {
         return object : Runnable {
             override fun run() {
                 val currentBackground = if (view.tag == "fondo_blanco") background2 else background1
                 view.setBackgroundResource(currentBackground)
                 view.tag = if (currentBackground == background1) "fondo_blanco" else "fondo_rojo"
 
-                // Handle vibration
-                if (vibrationCounterFuego % 4 == 0 && vibratorFuego.hasVibrator()) {
-                    vibrateDevice(VibrationEffect.DEFAULT_AMPLITUDE)
+                // Control de vibración específico
+                if (vibrationCounter % 4 == 0 && vibrator.hasVibrator()) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
                 }
-                vibrationCounterFuego++
-                handlerFuego.postDelayed(this, 100)
 
+                handler.postDelayed(this, 100)
             }
         }
     }
 
-    // Toggle flashing for fire
+
     private fun toggleFlashingFuego() {
         if (isFlashingFuego) {
             handlerFuego.removeCallbacks(runnableFuego)
             cuadroParpadeanteFuego.setBackgroundResource(R.drawable.fondo_con_fuego)
             cuadroParpadeanteFuego.tag = "fondo_blanco"
+            isVibratingTerremoto = false // Reiniciar estado de vibración
         } else {
             handlerFuego.post(runnableFuego)
+            vibrationCounterFuego = 0 // Reiniciar contador de vibración para evitar acumulación
         }
         isFlashingFuego = !isFlashingFuego
     }
 
-    // Toggle flashing for earthquake
     private fun toggleFlashingTerremoto() {
         if (isFlashingTerremoto) {
             handlerTerremoto.removeCallbacks(runnableTerremoto)
             cuadroParpadeanteTerremoto.setBackgroundResource(R.drawable.fondo_terremoto)
             cuadroParpadeanteTerremoto.tag = "fondo_terremoto"
+            isVibratingTerremoto = false // Reiniciar estado de vibración
         } else {
             handlerTerremoto.post(runnableTerremoto)
+            vibrationCounterTerremoto = 0 // Reiniciar contador de vibración para evitar acumulación
         }
         isFlashingTerremoto = !isFlashingTerremoto
     }
+
 
     // Setup LED control buttons
     private fun setupLedControlButtons(vararg buttons: Button) {
