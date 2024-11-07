@@ -47,7 +47,7 @@ class ledsActivity : BaseActivity() {
     private var isGarageOpen = false
     private lateinit var textViewAgua: TextView
     private lateinit var sharedPreferences: SharedPreferences // Declara SharedPreferences
-    private val storedPassword = sharedPreferences.getString("password", null)
+    private var storedPassword: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +56,9 @@ class ledsActivity : BaseActivity() {
 
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
         setupWindowInsets()
-        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        storedPassword = sharedPreferences.getString("password", null)
         // Button initialization
         textViewAgua = findViewById(R.id.btnagua)
         val btnBano2 = findViewById<Button>(R.id.btnBano2)
@@ -251,7 +252,7 @@ class ledsActivity : BaseActivity() {
             }
             else -> {
                 // Si el mensaje no es uno de los casos anteriores, actualizar el TextView
-                if (response != "tipo de mensaje no válido") {
+                if (response != "tipo de mensaje no válido" && response!= "true") {
                     // Verifica si el mensaje comienza con un número
                     textViewAgua.text = response // Cambia el texto del TextView al mensaje recibido
 
