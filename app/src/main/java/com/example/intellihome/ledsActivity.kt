@@ -20,10 +20,12 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.util.Log
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -66,10 +68,10 @@ class ledsActivity : BaseActivity() {
         val btnCuarto1 = findViewById<Button>(R.id.btnCuarto1)
         val btnSala = findViewById<Button>(R.id.btnSala)
         val btnCuarto2 = findViewById<Button>(R.id.btnCuarto2)
-        val btnLuces = findViewById<Button>(R.id.btnluces)
+
         val retrocederButton = findViewById<Button>(R.id.retrocederhome)
         val myImageView = findViewById<ImageView>(R.id.myImageView)
-        val btnSismo = findViewById<Button>(R.id.btnSismo) // Earthquake button
+
 
         btnAutenticacion = findViewById(R.id.btnAutenticacion)
 
@@ -97,8 +99,7 @@ class ledsActivity : BaseActivity() {
         setupFlashingRunnables()
 
         // Button click listeners
-        btnSismo.setOnClickListener { toggleFlashingTerremoto() }
-        btnLuces.setOnClickListener { toggleFlashingFuego() }
+
 
 
 
@@ -126,6 +127,7 @@ class ledsActivity : BaseActivity() {
 
     private fun createFlashingRunnable(view: View, background1: Int, background2: Int, vibrationCounter: Int, vibrator: Vibrator, handler: Handler): Runnable {
         return object : Runnable {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun run() {
                 val currentBackground = if (view.tag == "fondo_blanco") background2 else background1
                 view.setBackgroundResource(currentBackground)
