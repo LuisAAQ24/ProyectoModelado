@@ -9,14 +9,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:text="Ubicación"/>
+        android:text="Descripción: "/>
 
 
     <TextView
         android:id="@+id/capacidad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ubicación"/>
+        android:text="Capacidad: "/>
 
     <TextView
         android:id="@+id/ubicacion"
@@ -27,7 +27,7 @@
         android:id="@+id/amenidades"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Precio"/>
+        android:text="Amenidades: "/>
     <TextView
         android:id="@+id/precio"
         android:layout_width="wrap_content"
@@ -37,24 +37,34 @@
         android:id="@+id/reglas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Precio"/>
+        android:text="Reglas"/>
     <TextView
         android:id="@+id/fechainicio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Precio"/>
+        android:text="Inicio de disponibilidad"/>
 
     <TextView
         android:id="@+id/fechafin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Amenidades"/>
+        android:text="Fin de disponibilidad"/>
     <TextView
         android:id="@+id/reglas1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Reglas"/>
+    <Button
+        android:id="@+id/selectStartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar fecha de inicio" />
 
+    <Button
+        android:id="@+id/selectEndDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar fecha de fin" />
     <Button
         android:id="@+id/buttonRent"
         android:layout_width="wrap_content"

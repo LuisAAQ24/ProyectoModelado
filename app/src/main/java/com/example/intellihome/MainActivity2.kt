@@ -85,7 +85,7 @@ class MainActivity2 : BaseActivity() {
         setContentView(R.layout.activity_main2)
         ThemeUtils.applyTheme(this)
         socketViewModel = ViewModelProvider(this).get(SocketViewModel::class.java)
-        socketViewModel.connectToServer("172.18.65.141", 6060)
+        socketViewModel.connectToServer("172.18.126.148", 6060)
         socketViewModel.serverResponse.observe(this, androidx.lifecycle.Observer { response ->
             handleServerResponse(response)
         })
@@ -168,7 +168,8 @@ class MainActivity2 : BaseActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-        } else {
+        }
+        if (response == "false") {
             Toast.makeText(this, getString(R.string.Login4), Toast.LENGTH_SHORT).show() // "Registro fallido"
         }
     }

@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import java.util.*
 import androidx.lifecycle.Observer
 import android.util.Log
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class publicarActivity : BaseActivity() {
     private val imagenesSeleccionadas = mutableListOf<Uri>() // Lista para almacenar las imágenes seleccionadas
@@ -80,10 +79,7 @@ class publicarActivity : BaseActivity() {
         // Iniciar conexión al servidor
         socketViewModel.connectToServer("172.18.116.167", 6060)
 
-        // Ver las respuestas del servidor
-        socketViewModel.serverResponse.observe(this, Observer { response ->
-            handleServerResponse(response)
-        })
+
 
         // Configuración de SeekBar para el precio
         seekBarPrecio.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -225,8 +221,8 @@ class publicarActivity : BaseActivity() {
 
     private fun enviarDatosAlServidor() {
         if (validarCampos()) {
-            val datos = getDatosIngresados()
-            socketViewModel.sendMessage(datos)
+            val dates = getDatosIngresados()
+            socketViewModel.sendMessage(dates)
             val intent = Intent(this, MainActivity3::class.java)
             startActivity(intent)
         }
@@ -301,10 +297,6 @@ class publicarActivity : BaseActivity() {
         return mediaArmonicaAjustada
     }
 
-    private fun handleServerResponse(response: String) {
-        // Procesar la respuesta del servidor aquí
-        Toast.makeText(this, "Respuesta del servidor: $response", Toast.LENGTH_SHORT).show()
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

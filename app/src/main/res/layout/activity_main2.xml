@@ -53,7 +53,7 @@
                 android:layout_height="200dp"
                 android:layout_marginBottom="10dp"
                 android:scaleType="centerCrop"
-                android:background="@drawable/perfil1"
+                android:background="@drawable/gente"
                 android:layout_gravity="center"
                 android:contentDescription="@string/res2"
                 android:clickable="true"

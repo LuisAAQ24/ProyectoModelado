@@ -68,7 +68,7 @@ class MainActivity : BaseActivity() { // Cambiado a BaseActivity
         }
 
         // Iniciar conexión al servidor
-        socketViewModel.connectToServer("172.18.65.141", 6060)
+        socketViewModel.connectToServer("172.18.126.148", 6060)
 
         // ver las respuestas del servidor
         socketViewModel.serverResponse.observe(this, Observer { response ->
@@ -95,8 +95,8 @@ class MainActivity : BaseActivity() { // Cambiado a BaseActivity
             // Iniciar la actividad de menú
             val menu = Intent(this, MainActivity3::class.java)
             startActivity(menu)
-        } else {
-            println("Fallo34")
+        }
+        if (response== "false") {
             Toast.makeText(this, getString(R.string.Login4), Toast.LENGTH_SHORT).show() // Mensaje de autenticación fallida
         }
     }

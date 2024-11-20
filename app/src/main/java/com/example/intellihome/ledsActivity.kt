@@ -63,7 +63,12 @@ class ledsActivity : BaseActivity() {
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         storedPassword = sharedPreferences.getString("password", null)
         // Button initialization
-        textViewAgua = findViewById(R.id.btnagua)
+
+        val btnHumedad = findViewById<Button>(R.id.btnagua)
+        btnHumedad.setOnClickListener {
+            // Enviar mensaje al servidor para obtener la humedad
+            socketViewModel.sendMessage("leds,humedad")
+        }
         val btnBano2 = findViewById<Button>(R.id.btnBano2)
         val btnCuarto1 = findViewById<Button>(R.id.btnCuarto1)
         val btnSala = findViewById<Button>(R.id.btnSala)
@@ -79,7 +84,7 @@ class ledsActivity : BaseActivity() {
 
 
         // Connect to socket server
-        socketViewModel.connectToServer("172.18.65.141", 6060)
+        socketViewModel.connectToServer("172.18.126.148", 6060)
 
         // Set an image programmatically
         myImageView.setImageResource(R.drawable.casa)
@@ -258,10 +263,11 @@ class ledsActivity : BaseActivity() {
             }
             else -> {
                 // Si el mensaje no es uno de los casos anteriores, actualizar el TextView
-                if (response != "tipo de mensaje no válido" && response!= "true") {
-                    // Verifica si el mensaje comienza con un número
-                    textViewAgua.text = response // Cambia el texto del TextView al mensaje recibido
-
+                val btnHumedad = findViewById<Button>(R.id.btnagua)
+                if (response?.matches(Regex("\\d+")) == true) {
+                    btnHumedad.text = "Humedad: $response%"
+                } else if (response != "tipo de mensaje no válido" && response != "true") {
+                    btnHumedad.text = response // Cambia el texto del botón al mensaje recibido
                 }
             }
         }

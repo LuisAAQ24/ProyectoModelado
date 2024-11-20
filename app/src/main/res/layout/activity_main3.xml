@@ -21,29 +21,42 @@
             android:layout_marginStart="11dp"
             android:layout_marginLeft="11dp"
             android:layout_marginTop="11dp"
-            android:layout_marginEnd="11dp"
-            android:layout_marginRight="11dp"
-            android:layout_marginBottom="11dp"
             android:background="@drawable/amburguesa" />
-
-        <!-- Contenedor de botones dinámicos -->
-        <LinearLayout
-            android:id="@+id/button_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/buttonAbrirMenu"
-            android:layout_margin="16dp"
-            android:orientation="vertical" />
 
         <!-- Botón para refrescar datos desde el servidor -->
         <Button
             android:id="@+id/button_refresh"
-            android:layout_width="57dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/actualizar2"
-            android:gravity="left" />
+            android:layout_alignParentEnd="true"
+            android:layout_margin="16dp"
+            android:background="@drawable/actualizar2" />
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button_refresh"
+            android:layout_margin="16dp"
+            android:hint="Buscar propiedad"
+            android:inputType="text"
+            android:padding="16dp"
+            android:background="#ffffff"
+            android:textColor="#000000" />
+
+        <!-- ScrollView para el contenedor de botones dinámicos -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_above="@id/bottom_navigation"
+            android:layout_below="@id/search_edit_text"
+            android:layout_margin="16dp">
+
+            <LinearLayout
+                android:id="@+id/button_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
 
         <!-- Barra de navegación inferior -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -64,4 +77,3 @@
         android:background="#063970"
         app:menu="@menu/menu_hamburger" />
 </androidx.drawerlayout.widget.DrawerLayout>
-
